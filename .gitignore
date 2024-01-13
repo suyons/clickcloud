@@ -33,7 +33,6 @@ replay_pid*
 # Icon must end with two \r
 Icon
 
-
 # Thumbnails
 ._*
 
@@ -128,3 +127,6 @@ gradle-app.setting
 ### Gradle Patch ###
 # Java heap dump
 *.hprof
+
+### Environment ###
+.env
