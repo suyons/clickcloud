@@ -1,9 +1,5 @@
-# Use a base image that includes xargs
-FROM ubuntu:latest
-
-# Add the apt repositories
-RUN apt-get update
-RUN apt-get install openjdk-21-jdk -y
+# Base image
+FROM eclipse-temurin:21-jdk-alpine
 
 # Set the working directory inside the container
 WORKDIR /app
