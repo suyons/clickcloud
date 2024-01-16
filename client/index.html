@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700,800,900&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.0/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/@webpixels/css@1.1.93/dist/index.css">
+  <script src="maps_config.js"></script>
+  <title>Clickcloud 날씨 지도</title>
+  <script>
+    let map;
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 20, lng: -160 },
+        zoom: 2,
+      });
+
+      infoWindow = new google.maps.InfoWindow({
+        content: ""
+      });
+
+      // Get the earthquake data (JSONP format)
+      // This feed is a copy from the USGS feed, you can find the originals here:
+      //   http://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
+      const script = document.createElement("script");
+
+      script.setAttribute(
+        "src",
+        "https://storage.googleapis.com/mapsdevsite/json/quakes.geo.json"
+      );
+      document.getElementsByTagName("head")[0].appendChild(script);
+    }
+
+    // Defines the callback function referenced in the jsonp file.
+    function eqfeed_callback(results) {
+
+      for (let i = 0; i < results.features.length; i++) {
+        const coords = results.features[i].geometry.coordinates;
+
+        const latLng = new google.maps.LatLng(coords[1], coords[0]);
+        const marker = new google.maps.Marker({
+          position: latLng,
+          map: map,
+        });
+
+        const f = results.features[i].properties;
+
+        marker.addListener("click", (e) => {
+          const d = new Date(0);
+          d.setUTCMilliseconds(f.time);
+
+          const contentString =
+            '<div class="info-window-content">' +
+            '<h2>' + f.place + '</h2>' +
+            '<h3>Magnitude ' + f.mag + '</h3><p>' + d.toString() + '</p>' +
+            '<a href="' + f.url + '" target="new">View on USGS</a>' +
+            '</div>';
+
+          infoWindow.setContent(contentString);
+          infoWindow.open({
+            anchor: marker,
+            map,
+            shouldFocus: false,
+          });
+
+        });
+      }
+    }
+
+    window.initMap = initMap;
+    window.eqfeed_callback = eqfeed_callback;
+  </script>
+</head>
+
+<body class="group-layouts group-sidebar-layouts component-layout-sidebar-2 vsc-initialized">
+  <div class="d-flex flex-column flex-lg-row h-lg-full bg-gray-100">
+    <!-- Vertical Navbar -->
+    <nav
+      class="navbar show navbar-vertical h-lg-screen navbar-expand-lg px-0 py-3 py-lg-0 navbar-light bg-light border-end-lg"
+      id="navbarVertical">
+      <div class="container-fluid">
+        <!-- Toggler -->
+        <button class="navbar-toggler ms-n2" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"
+          aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Brand -->
+        <a class="navbar-brand py-lg-5 mb-lg-5 px-lg-6 me-0" href="#">
+          <img src="https://www.shareicon.net/download/2016/08/18/816084_cloud.svg" class="img-fluid">
+        </a>
+        <!-- User menu (mobile) -->
+        <div class="navbar-user d-lg-none">
+          <!-- Dropdown -->
+          <div class="dropdown">
+            <!-- Toggle -->
+            <a href="#" id="sidebarAvatar" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+              <div class="avatar bg-warning rounded-circle text-white">
+                <img alt="..."
+                  src="https://images.unsplash.com/photo-1579463148228-138296ac3b98?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=256&amp;h=256&amp;q=80">
+              </div>
+            </a>
+            <!-- Menu -->
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+              <div class="dropdown-item">
+                <span class="d-block text-sm text-muted mb-1">Signed in as</span>
+                <span class="d-block text-heading font-semibold">Heather Wright</span>
+              </div>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <a class="dropdown-item" href="#">Something else here</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Separated link</a>
+            </div>
+          </div>
+        </div>
+        <!-- Collapse -->
+        <div class="collapse navbar-collapse" id="sidebarCollapse">
+          <!-- Navigation -->
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="bi bi-house"></i> Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="bi bi-bar-chart"></i> Analitycs
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="bi bi-chat"></i> Messages
+                <span
+                  class="badge bg-opacity-30 bg-primary text-primary rounded-pill d-inline-flex align-items-center ms-auto">6</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="bi bi-bookmarks"></i> Collections
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="bi bi-people"></i> Users
+              </a>
+            </li>
+          </ul>
+          <!-- Divider -->
+          <hr class="navbar-divider my-5 opacity-20">
+          <!-- Navigation -->
+          <ul class="navbar-nav mb-md-4">
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="bi bi-gear"></i> Settings
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="bi bi-bell"></i> Notifications
+                <span
+                  class="badge bg-opacity-30 bg-danger text-danger rounded-pill d-inline-flex align-items-center ms-auto">23</span>
+              </a>
+            </li>
+          </ul>
+          <!-- Push content down -->
+          <div class="mt-auto"></div>
+          <!-- User (md) -->
+          <ul class="navbar-nav mb-5">
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="bi bi-person-square"></i> Account
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="bi bi-box-arrow-left"></i> Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Main content -->
+    <div class="h-screen px-3 px-lg-7 flex-grow-1 overflow-y-lg-auto" id="map">
+      <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-vW_ypSUXnvjMnX_VuR-gLLizAcdbhTI&callback=initMap&v=weekly"
+        defer></script>
+    </div>
+  </div>
+</body>
+
+</html>
