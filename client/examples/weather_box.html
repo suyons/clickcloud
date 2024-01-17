@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+  <style>
+    body {
+      text-align: center;
+      color: white;
+    }
+    .city{
+      text-align: left;
+      padding-left: 20px;
+      padding-top: 20px;
+      font-size: 30px;
+      margin-bottom: 5px;
+    }
+    .card {
+      background : linear-gradient(to left bottom, #81d2f8, #24b8fe)
+    }
+    .weather_icon {
+      font-size: 50px;
+    }
+    .detail {
+      display: flex;
+      padding: 0 20px;
+      margin-top: 50px;
+    }
+    .temp {
+      display: flex;
+      padding: 0 20px;
+      margin-top: 10px;
+    }
+    .weather_icon {
+      font-size: 150px;
+    }
+    .c_temp{
+      font-size: 50px;
+      text-align: left;
+      font-size: 100px;
+      vertical-align : middle;
+    }
+    .lh_temp{
+      vertical-align: middle;
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="weather">
+      <div class="city">Seoul</div>
+      <div class="temp">
+        <div class="c_temp">25°c</div>
+        <div class="lh_temp">
+          최저온도 : <span class="ltemp">20°c</span> / 최고온도 : <span class="htemp">30°c</span>
+        </div>
+      </div>  
+      <div class="weather_icon">
+      <i class="bi bi-cloud-drizzle"></i>
+      </div>
+      
+      </div>
+      <div class="detail">
+        <div>
+          <p>습도</p>
+          <p class="humidity">55%</p>
+        </div>
+        <div>
+          <p>풍속</p>
+          <p class="windspeed">1 km/h</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

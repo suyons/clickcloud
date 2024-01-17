@@ -9,6 +9,21 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.0/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://unpkg.com/@webpixels/css@1.1.93/dist/index.css">
   <script src="maps_config.js"></script>
+  <style>
+    .city{
+      font-size: 20px;
+    }
+    .wContainer{
+      text-align: center;
+      background : linear-gradient(to left bottom, #81d2f8, #24b8fe);
+    }
+    .c_temp{
+      font-size: 40px;
+    }
+    i{
+      font-size: 50px;
+    }
+  </style>
   <title>Clickcloud 날씨 지도</title>
   <script>
     let map;
@@ -20,7 +35,13 @@
       });
 
       infoWindow = new google.maps.InfoWindow({
-        content: ""
+        content: '<div class="wContainer"><div class="city">Seoul</div>' +
+                 '<div class="c_temp">25°c</div>' +
+                 '<img src=images/clear.png>' +
+                 '<div class="lh_temp">최저온도 : <span class="ltemp">20°c</span>' +
+                 ' / 최고온도 : <span class="htemp">30°c</span></div>' +
+                 '<p>습도 : <span class="humidity">55%</span> / ' +
+                 '풍속 : <span class="windspeed">1 km/h</span></p></div>'
       });
 
       // Get the earthquake data (JSONP format)
@@ -50,17 +71,17 @@
         const f = results.features[i].properties;
 
         marker.addListener("click", (e) => {
-          const d = new Date(0);
-          d.setUTCMilliseconds(f.time);
+          // const d = new Date(0);
+          // d.setUTCMilliseconds(f.time);
 
-          const contentString =
-            '<div class="info-window-content">' +
-            '<h2>' + f.place + '</h2>' +
-            '<h3>Magnitude ' + f.mag + '</h3><p>' + d.toString() + '</p>' +
-            '<a href="' + f.url + '" target="new">View on USGS</a>' +
-            '</div>';
+          // const contentString =
+          //   '<div class="info-window-content">' +
+          //   '<h2>' + f.place + '</h2>' +
+          //   '<h3>Magnitude ' + f.mag + '</h3><p>' + d.toString() + '</p>' +
+          //   '<a href="' + f.url + '" target="new">View on USGS</a>' +
+          //   '</div>';
 
-          infoWindow.setContent(contentString);
+          // infoWindow.setContent(contentString);
           infoWindow.open({
             anchor: marker,
             map,
