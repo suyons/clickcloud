@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -8,7 +7,7 @@
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.0/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://unpkg.com/@webpixels/css@1.1.93/dist/index.css">
-  <script src="maps_config.js"></script>
+  <!-- <script src="maps_config.js"></script> -->
   <style>
     .city{
       font-size: 20px;
@@ -20,81 +19,8 @@
     .c_temp{
       font-size: 40px;
     }
-    i{
-      font-size: 50px;
-    }
   </style>
   <title>Clickcloud 날씨 지도</title>
-  <script>
-    let map;
-
-    function initMap() {
-      map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: 20, lng: -160 },
-        zoom: 2,
-      });
-
-      infoWindow = new google.maps.InfoWindow({
-        content: '<div class="wContainer"><div class="city">Seoul</div>' +
-                 '<div class="c_temp">25°c</div>' +
-                 '<img src=images/clear.png>' +
-                 '<div class="lh_temp">최저온도 : <span class="ltemp">20°c</span>' +
-                 ' / 최고온도 : <span class="htemp">30°c</span></div>' +
-                 '<p>습도 : <span class="humidity">55%</span> / ' +
-                 '풍속 : <span class="windspeed">1 km/h</span></p></div>'
-      });
-
-      // Get the earthquake data (JSONP format)
-      // This feed is a copy from the USGS feed, you can find the originals here:
-      //   http://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
-      const script = document.createElement("script");
-
-      script.setAttribute(
-        "src",
-        "https://storage.googleapis.com/mapsdevsite/json/quakes.geo.json"
-      );
-      document.getElementsByTagName("head")[0].appendChild(script);
-    }
-
-    // Defines the callback function referenced in the jsonp file.
-    function eqfeed_callback(results) {
-
-      for (let i = 0; i < results.features.length; i++) {
-        const coords = results.features[i].geometry.coordinates;
-
-        const latLng = new google.maps.LatLng(coords[1], coords[0]);
-        const marker = new google.maps.Marker({
-          position: latLng,
-          map: map,
-        });
-
-        const f = results.features[i].properties;
-
-        marker.addListener("click", (e) => {
-          // const d = new Date(0);
-          // d.setUTCMilliseconds(f.time);
-
-          // const contentString =
-          //   '<div class="info-window-content">' +
-          //   '<h2>' + f.place + '</h2>' +
-          //   '<h3>Magnitude ' + f.mag + '</h3><p>' + d.toString() + '</p>' +
-          //   '<a href="' + f.url + '" target="new">View on USGS</a>' +
-          //   '</div>';
-
-          // infoWindow.setContent(contentString);
-          infoWindow.open({
-            anchor: marker,
-            map,
-            shouldFocus: false,
-          });
-
-        });
-      }
-    }
-
-    window.initMap = initMap;
-    window.eqfeed_callback = eqfeed_callback;
-  </script>
 </head>
 
 <body class="group-layouts group-sidebar-layouts component-layout-sidebar-2 vsc-initialized">
@@ -111,7 +37,7 @@
         </button>
         <!-- Brand -->
         <a class="navbar-brand py-lg-5 mb-lg-5 px-lg-6 me-0" href="#">
-          <img src="https://www.shareicon.net/download/2016/08/18/816084_cloud.svg" class="img-fluid">
+          <img src="https://www.shareicon.net/download/2016/08/18/816084_cloud.svg" class="img-fluid bg-light" id="refresh">
         </a>
         <!-- User menu (mobile) -->
         <div class="navbar-user d-lg-none">
@@ -120,9 +46,9 @@
             <!-- Toggle -->
             <a href="#" id="sidebarAvatar" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
-              <div class="avatar bg-warning rounded-circle text-white">
+              <div class="avatar text-white">
                 <img alt="..."
-                  src="https://images.unsplash.com/photo-1579463148228-138296ac3b98?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=256&amp;h=256&amp;q=80">
+                  src="https://www.shareicon.net/download/2016/08/18/816084_cloud.svg" id="refresh">
               </div>
             </a>
             <!-- Menu -->
@@ -142,8 +68,14 @@
         </div>
         <!-- Collapse -->
         <div class="collapse navbar-collapse" id="sidebarCollapse">
-          <!-- Navigation -->
-          <ul class="navbar-nav">
+          <div class="searchCName">
+            <form class="d-flex p-2">
+              <input class="form-control me-2" action="" type="text" placeholder="City Name" aria-label="Search">
+              <button class="btn btn-outline-success mt-3 p-2" type="button">Search</button>
+            </form>
+          </div>
+        <!-- Navigation -->  
+          <ul class="navbar-nav">  
             <li class="nav-item">
               <a class="nav-link" href="#">
                 <i class="bi bi-house"></i> Dashboard
@@ -210,10 +142,218 @@
     <!-- Main content -->
     <div class="h-screen px-3 px-lg-7 flex-grow-1 overflow-y-lg-auto" id="map">
       <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-vW_ypSUXnvjMnX_VuR-gLLizAcdbhTI&callback=initMap&v=weekly"
-        defer></script>
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAaDORY0JJFdyxxANCamZe-N6fD7tvZDVU&callback=initMap&v=weekly"
+        defer></script>                                  
     </div>
+    <!-- AIzaSyA-vW_ypSUXnvjMnX_VuR-gLLizAcdbhTI -->
   </div>
+
+  
+  <script>
+    let map;
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 20, lng: -160 },
+        zoom: 2,
+      });
+
+      // infoWindow = new google.maps.InfoWindow({
+      //   content: '<div class="wContainer"><div class="city">Seoul</div>' +
+      //            '<div class="c_temp">20°c</div>' +
+      //            '<img src=images/clear.png>' +
+      //            '<div class="lh_temp">최저온도 : <span class="ltemp">20°c</span>' +
+      //            ' / 최고온도 : <span class="htemp">30°c</span></div>' +
+      //            '<p>습도 : <span class="humidity">55%</span> / ' +
+      //            '풍속 : <span class="windspeed">1 km/h</span></p></div>'
+      // });
+
+      // Get the earthquake data (JSONP format)
+      // This feed is a copy from the USGS feed, you can find the originals here:
+      //   http://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
+      const script = document.createElement("script");
+
+      script.setAttribute(
+        "src",
+        "https://storage.googleapis.com/mapsdevsite/json/quakes.geo.json"
+      );
+      document.getElementsByTagName("head")[0].appendChild(script);
+    }
+
+    // Defines the callback function referenced in the jsonp file.
+    // function eqfeed_callback(results) {
+
+    //   for (let i = 0; i < results.features.length; i++) {
+    //     const coords = results.features[i].geometry.coordinates;
+
+    //     const latLng = new google.maps.LatLng(coords[1], coords[0]);
+    //     const marker = new google.maps.Marker({
+    //       position: latLng,
+    //       map: map,
+    //     });
+
+    //     const f = results.features[i].properties;
+
+    //     marker.addListener("click", (e) => {
+    //       // const d = new Date(0);
+    //       // d.setUTCMilliseconds(f.time);
+
+    //       // const contentString =
+    //       //   '<div class="info-window-content">' +
+    //       //   '<h2>' + f.place + '</h2>' +
+    //       //   '<h3>Magnitude ' + f.mag + '</h3><p>' + d.toString() + '</p>' +
+    //       //   '<a href="' + f.url + '" target="new">View on USGS</a>' +
+    //       //   '</div>';
+
+    //       // infoWindow.setContent(contentString);
+    //       infoWindow.open({
+    //         anchor: marker,
+    //         map,
+    //         shouldFocus: false,
+    //       });
+
+    //     });
+    //   }
+    // }
+
+      function eqfeed_callback(results) {
+      // Remove existing markers
+      for (let i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+      }
+      markers = [];  // Clear the markers array
+
+      // Add marker for Seoul
+      const seoulLatLng = new google.maps.LatLng(37.5665, 126.9780);  // Coordinates for Seoul
+      const cityMarker = new google.maps.Marker({
+        position: seoulLatLng,
+        map: map,
+        title: 'Seoul'
+      });
+
+      // Info window content for Seoul
+      let InfoWindowContent = '<div class="wContainer">' +
+                                  '<div class="city">Seoul</div>' +
+                                  '<div class="c_temp">20°C</div>' +
+                                  '<img src="https://github.com/mogri89/weatherapp/blob/main/images/clouds.png?raw=true" class="weather-icon">' +
+                                  '<div class="lh_temp"><span class="ltemp">20°C</span>' +
+                                  ' / <span class="htemp">30°C</span></div>' +
+                                  '<p><img src="images/humidity.png"> : <span class="humidity">55%</span> / ' +
+                                  '<img src ="images/wind.png"> : <span class="windspeed">1 km/h</span></p></div>';
+                                    
+      
+      // 콘솔 출력 추가
+      console.log("InfoWindowContent:", InfoWindowContent);
+
+      // Info window for Seoul
+      const googleInfoWindow = new google.maps.InfoWindow({
+        content: InfoWindowContent
+      });
+
+      cityMarker.addListener('click', () => {
+        googleInfoWindow.open({
+          anchor: cityMarker,
+          map,
+          shouldFocus: false,
+        });
+      });
+
+      // Save the markers to the global markers array
+      markers.push(cityMarker);
+    }  
+
+    let markers = [];
+
+    window.initMap = initMap;
+    window.eqfeed_callback = eqfeed_callback;
+  </script>
+  <!-- 상단 아이콘 클릭시 페이지 새로고침 -->
+  <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        const navbarCollapse = document.querySelector('.navbar-collapse');
+
+        navbarToggler.addEventListener('click', function () {
+          if (navbarCollapse.classList.contains('show')) {
+            navbarCollapse.classList.remove('show');
+          } else {
+            navbarCollapse.classList.add('show');
+          }
+        });
+      });
+  </script>
+  <!-- 아이콘 새로고침 코드 추가 -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const refreshIcon = document.getElementById('refresh');
+
+      refreshIcon.addEventListener('click', function () {
+        location.reload(true); 
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const avatarLink = document.getElementById('sidebarAvatar');
+
+    avatarLink.addEventListener('click', function (event) {
+      event.preventDefault(); // 기본 동작을 막음 (페이지 이동)
+      location.reload(true); // true를 전달하여 캐시를 무시하고 강제로 새로고침
+    });
+  });
+  </script>
+
+  <!-- 검색 메서드 -->
+  <script>
+
+    
+    document.addEventListener('DOMContentLoaded', function () {
+      const apiKey = "38441e8dedceb6c9e64960261dea0d91";
+      const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+      const searchCity = document.querySelector(".searchCName input");
+      const searchBtn = document.querySelector(".searchCName button");
+      const weatherIcon = document.querySelector(".weather-icon");
+
+      async function checkWeather(city){
+        const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+        var data = await response.json();
+          
+
+        document.querySelector(".city").innerHTML = data.name;
+        document.querySelector(".c_temp").innerHTML = Math.round(data.main.temp) + "°c";
+        document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+        document.querySelector(".windspeed").innerHTML = data.wind.speed + " km/h";
+        document.querySelector(".ltemp").innerHTML = data.main.temp_min + "°c";
+        document.querySelector(".htemp").innerHTML = data.main.temp_max + "°c";
+
+        if (weatherIcon) {
+          const weatherMain = data.weather[0].main;
+          
+          if (weatherMain == "Clouds") {
+            weatherIcon.src = "https://github.com/mogri89/weatherapp/blob/main/images/clouds.png?raw=true";
+          } else if (weatherMain == "Clear") {
+            weatherIcon.src = "https://github.com/mogri89/weatherapp/blob/main/images/clear.png?raw=true";
+          } else if (weatherMain == "Rain") {
+            weatherIcon.src = "https://github.com/mogri89/weatherapp/blob/main/images/rain.png?raw=true";
+          } else if (weatherMain == "Drizzle") {
+            weatherIcon.src = "https://github.com/mogri89/weatherapp/blob/main/images/drizzle.png?raw=true";
+          } else if (weatherMain == "Mist") {
+            weatherIcon.src = "https://github.com/mogri89/weatherapp/blob/main/images/mist.png?raw=true";
+          }
+        } else {
+          console.error("weatherIcon not found");
+        }
+
+      }
+      
+      searchBtn.addEventListener("click", ()=>{
+      checkWeather(searchCity.value);
+    });
+
+      
+    });
+  </script>
+
 </body>
 
 </html>
