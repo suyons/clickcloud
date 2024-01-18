@@ -51,7 +51,7 @@
 
 ![Package Diagram](docs/package_diagram.svg)
 
-**Entity - Relation Diagram**
+**ER Diagram**
 
 ![ER Diagram](docs/database_erd.svg)
 
