@@ -2,6 +2,8 @@ package clickcloud.server.dto;
 
 import lombok.Data;
 
+//DTO
+
 @Data
 public class DetailedWeather {
     private String city_name;
