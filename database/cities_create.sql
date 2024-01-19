@@ -11,6 +11,6 @@ CREATE TABLE cities (
     FOREIGN KEY (country_id) REFERENCES countries(country_id)
 );
 
-SELECT * FROM cities;
-
 DELETE FROM cities WHERE 1 = 1;
+
+SELECT * FROM cities;
