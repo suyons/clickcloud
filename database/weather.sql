@@ -27,27 +27,28 @@ CREATE TABLE weather (
     FOREIGN KEY (city_id) REFERENCES cities(city_id)
 );
 
+-- MOCK DATA
 INSERT INTO weather
 VALUES (
-        /* weather_id */ 8105,
-        /* city_id */ 1835848,
-        /* w_title */ 'Clear',
-        /* w_description */ 'clear sky',
-        /* temp_now */ 2.96,
-        /* temp_feels */ -0.39,
-        /* temp_min */ 2.69,
-        /* temp_max */ 3.66,
-        /* pressure */ 1012,
-        /* humidity */ 83,
-        /* wind_speed */ 3.6,
-        /* wind_deg */ 310,
-        /* rain_1h */ 2.31,
-        /* snow_1h */ NULL,
-        /* cloud */ 60,
-        /* sunrise */ 1705531499,
-        /* sunset */ 1705567137,
-        /* time_update */ 1705542138
-    );
+    /* weather_id */ 8105,
+    /* city_id */ 1835848,
+    /* w_title */ 'Clear',
+    /* w_description */ 'clear sky',
+    /* temp_now */ 2.96,
+    /* temp_feels */ -0.39,
+    /* temp_min */ 2.69,
+    /* temp_max */ 3.66,
+    /* pressure */ 1012,
+    /* humidity */ 83,
+    /* wind_speed */ 3.6,
+    /* wind_deg */ 310,
+    /* rain_1h */ 2.31,
+    /* snow_1h */ NULL,
+    /* cloud */ 60,
+    /* sunrise */ 1705531499,
+    /* sunset */ 1705567137,
+    /* time_update */ 1705542138
+);
 
 INSERT INTO weather
 VALUES (
