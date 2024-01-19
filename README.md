@@ -60,20 +60,29 @@
 ## 05 돌아보며
 
 ## 06 참고 문서
-### overall
-1. [[ClickCloud] 개발 환경 준비 안내](https://velog.io/@syoungs/project-2)
-
 ### server
-1. [[Spring] AJAX 예제: RSS 피드 XML 파싱 (Feat. jQuery)](https://velog.io/@syoungs/spring-3)
+* [[Spring] AJAX 예제: RSS 피드 XML 파싱 (Feat. jQuery)](https://velog.io/@syoungs/spring-3)
+* [[Spring boot] 스프링부트, Mybatis 세팅 및 샘플 예시](https://needjarvis.tistory.com/771)
 
 ### client
-1. [Air Overflow: 지도 기반 미세먼지 확인 앱](https://adam-37.gitbook.io/joomadeung/projects/projects/undefined)
-2. [v0.dev: a weather app looks like the iOS weather app](https://v0.dev/t/bo2N7pU)
-3. [SunnyMap](https://sunnymap.net/)
-4. [Code Samples | Google for Developers](https://developers.google.com/maps/documentation/javascript/examples)
-5. [GitHub - mogri89/weatherapp](https://github.com/mogri89/weatherapp/)
+* [Air Overflow: 지도 기반 미세먼지 확인 앱](https://adam-37.gitbook.io/joomadeung/projects/projects/undefined)
+* [v0.dev: a weather app looks like the iOS weather app](https://v0.dev/t/bo2N7pU)
+* [SunnyMap](https://sunnymap.net/)
+* [Code Samples | Google for Developers](https://developers.google.com/maps/documentation/javascript/examples)
+* [GitHub - mogri89/weatherapp](https://github.com/mogri89/weatherapp/)
+* [Bootstrap 5 Tutorial - W3Schools](https://www.w3schools.com/bootstrap5/)
 
 ### database
-1. [SQL style guide by Simon Holywell](https://www.sqlstyle.guide/)
-2. [SQL Style Guide | The GitLab Handbook](https://handbook.gitlab.com/handbook/business-technology/data-team/platform/sql-style-guide/)
-3. [ERDCloud Library](https://www.erdcloud.com/library)
+* [SQL style guide by Simon Holywell](https://www.sqlstyle.guide/)
+* [SQL Style Guide | The GitLab Handbook](https://handbook.gitlab.com/handbook/business-technology/data-team/platform/sql-style-guide/)
+* [ERDCloud Library](https://www.erdcloud.com/library)
+* [MySQL Connector/J Developer Guide](https://dev.mysql.com/doc/connector-j/en/connector-j-reference-type-conversions.html)
+* [ISO 3166 Country List](https://www.localeplanet.com/icu/iso3166.html)
+
+### OpenAPI
+* [Current weather data - OpenWeatherMap](https://openweathermap.org/current)
+* [Geocoding API - OpenWeatherMap](https://openweathermap.org/api/geocoding-api)
+* [Weather Conditions - OpenWeatherMap](https://openweathermap.org/weather-conditions)
+
+### other
+* [[ClickCloud] 개발 환경 준비 안내](https://velog.io/@syoungs/project-2)
