@@ -6,6 +6,6 @@ import lombok.Data;
 public class BriefWeather {
     private String city_name;
     private String w_title;
-    private double pos_x;
-    private double pos_y;
+    private double latitude;
+    private double longitude;
 }
