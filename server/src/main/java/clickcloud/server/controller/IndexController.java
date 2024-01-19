@@ -1,22 +1,22 @@
-package clickcloud.server.components;
+package clickcloud.server.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import reactor.core.publisher.Mono;
 
-@Controller
+@RestController
 public class IndexController {
+    @Value("${index.url}")
+    private String indexUrl;
+
 	@GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
-	@ResponseBody
 	public Mono<String> getIndex() {
-		Dotenv env = Dotenv.load();
 		final WebClient client = WebClient.create();
-		return client.get().uri(env.get("INDEX_URI"))
+		return client.get().uri(indexUrl)
 				.retrieve().bodyToMono(String.class);
 	}
 }
