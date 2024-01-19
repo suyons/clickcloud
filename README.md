@@ -86,3 +86,4 @@
 
 ### other
 * [[ClickCloud] 개발 환경 준비 안내](https://velog.io/@syoungs/project-2)
+* [PPT 템플릿, 새별스러운 새별 블로그](https://blog.naver.com/PostList.naver?blogId=seiru523&categoryNo=169)
