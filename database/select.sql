@@ -1,8 +1,8 @@
 -- 테이블에 저장된 모든 도시의 날씨 제목과 좌표 불러오기
 SELECT city_name,
     w_title,
-    pos_x,
-    pos_y
+    latitude,
+    longitude
 FROM weather
     JOIN cities USING (city_id);
 
