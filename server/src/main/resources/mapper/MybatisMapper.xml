@@ -8,7 +8,7 @@
 
   <!-- id : 메서드 이름 지정 / resultType : 결과를 매핑할 Java 객체 클래스 -->
 
-    <select id="getAllWeather" resultType="clickcloud.server.dto.BriefWeather">
+    <select id="getAll" resultType="clickcloud.server.dto.BriefWeather">
         SELECT city_name, w_title, latitude, longitude
         FROM weather
         JOIN cities USING (city_id)

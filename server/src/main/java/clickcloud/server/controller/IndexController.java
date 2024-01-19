@@ -12,9 +12,9 @@ import reactor.core.publisher.Mono;
 
 @RestController
 public class IndexController {
-		//.properties 파일의 index.url값을 필드 indexUrl에 주입
-    @Value("${index.url}")
-    private String indexUrl;
+	//.properties 파일의 index.url값을 필드 indexUrl에 주입
+	@Value("${index.url}")
+	private String indexUrl;
 
 	//index.html 파일 가져와서 뷰에 전달하는 api
 	@GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE) //해당 경로에 GET(조회) 요청
@@ -24,6 +24,6 @@ public class IndexController {
 				.retrieve().bodyToMono(String.class);
 	}
 
-	
+
 
 }

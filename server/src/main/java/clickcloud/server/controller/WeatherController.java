@@ -26,11 +26,11 @@ public class WeatherController {
     //GET - 전체 날씨 조회 api / 주요 100개 도시만 가져온다. (기존에 저장된 테이블에서 가져오면 됨)
     @GetMapping(value = "/getAllWeather", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<BriefWeather> getAllWeather() {
-        return mybatisMapper.getAllWeather();
+        return mybatisMapper.getAll();
     }
 
-    //POST - 세부 날씨 조회 api(검색) - 기존 저장된 데이터 + 오픈웨더api 데이터 중에서 찾는다. 
-    //바디파라미터..?@ResponseBody
+    //POST - 세부 날씨 조회 api(검색) - 기존 저장된 데이터 + 오픈웨더api 데이터 중에서 찾는다. / 조회한걸 왜올려.? 조회한 목록 보기..?
+    //바디파라미터..?@ResponseBody / db에 올려..?
     @PostMapping(value = "/searchName/{city_name}", produces = MediaType.APPLICATION_JSON_VALUE)
     public DetailedWeather searchName(@PathVariable("city_name") String city_name) {
         return mybatisMapper.searchName(city_name);
