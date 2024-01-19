@@ -1,0 +1,27 @@
+<!-- resources/clickcloud/server/mybatis/MybatisMapper.xml -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace : Java 인터페이스 경로 -->
+<mapper namespace="clickcloud.server.mybatis.MybatisMapper"> 
+
+  <!-- id : 메서드 이름 지정 / resultType : 결과를 매핑할 Java 객체 클래스 -->
+
+    <select id="getAllWeather" resultType="clickcloud.server.dto.BriefWeather">
+        SELECT city_name, w_title, latitude, longitude
+        FROM weather
+        JOIN cities USING (city_id)
+    </select>
+  
+    <select id="searchName" resultType="clickcloud.server.dto.DetailedWeather" parameterType="String">
+        SELECT city_name, country_name, w_title, w_description, temp_now, temp_feels, temp_min, temp_max,
+               pressure, humidity, wind_speed, wind_deg, rain_1h, snow_1h, cloud, sunrise, sunset, time_update,
+               timezone
+        FROM weather
+        JOIN cities USING (city_id)
+        JOIN countries USING (country_id)
+        WHERE city_name = #{city_name}
+    </select>
+
+</mapper>
