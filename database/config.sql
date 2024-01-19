@@ -1,7 +1,9 @@
-CREATE DATABASE CLICKCLOUD;
+DROP DATABASE clickcloud;
+
+CREATE DATABASE clickcloud;
 
 CREATE USER 'clickcloud'@'%' IDENTIFIED BY '{PASSWORD}';
 
-GRANT ALL PRIVILEGES ON CLICKCLOUD.* to 'clickcloud'@'%';
+GRANT ALL PRIVILEGES ON clickcloud.* TO 'clickcloud'@'%';
 
 SHOW GRANTS FOR 'clickcloud'@'%';

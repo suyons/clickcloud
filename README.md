@@ -10,9 +10,9 @@
 
     | 이름 | 프로필 | 역할 |
     | :-: | :-: | --- |
-    | 김수영 | [@suyons](https://github.com/suyons) | (1) 아이디어 기획, 개발 환경 준비<br>(2) DB 설계 및 데이터 입출력 구현<br>(3) 클라우드 배포 설정 |
+    | 김수영 | [@suyons](https://github.com/suyons) | (1) 아이디어 기획, 개발 환경 준비<br>(2) DB 설계 및 서버 연동<br>(3) 클라우드 배포 설정 |
     | 박지은 | [@parkje72](https://github.com/parkje72) | (1) 서버 REST API 구현<br>(2) 클라이언트 데이터 처리 |
-    | 이동준 | [@mogri89](https://github.com/mogri89) | (1) 프론트엔드 페이지 작성<br>(2) 클라이언트 데이터 처리<br>(3) OpenAPI 도입 |
+    | 이동준 | [@mogri89](https://github.com/mogri89) | (1) 프론트엔드 페이지 작성<br>(2) 클라이언트 데이터 처리<br>(3) OpenAPI 도입 및 자원 관리 |
 
 5. 개발 목적
     * 수업에서 학습한 내용 적용 연습 및 추가 학습을 통한 기술 확보
@@ -51,13 +51,29 @@
 
 ![Package Diagram](docs/package_diagram.svg)
 
+**ER Diagram**
+
+![ER Diagram](docs/database_erd.svg)
+
 ## 04 구현 기능
 
 ## 05 돌아보며
 
 ## 06 참고 문서
+### overall
+1. [[ClickCloud] 개발 환경 준비 안내](https://velog.io/@syoungs/project-2)
+
+### server
+1. [[Spring] AJAX 예제: RSS 피드 XML 파싱 (Feat. jQuery)](https://velog.io/@syoungs/spring-3)
+
+### client
 1. [Air Overflow: 지도 기반 미세먼지 확인 앱](https://adam-37.gitbook.io/joomadeung/projects/projects/undefined)
 2. [v0.dev: a weather app looks like the iOS weather app](https://v0.dev/t/bo2N7pU)
 3. [SunnyMap](https://sunnymap.net/)
 4. [Code Samples | Google for Developers](https://developers.google.com/maps/documentation/javascript/examples)
 5. [GitHub - mogri89/weatherapp](https://github.com/mogri89/weatherapp/)
+
+### database
+1. [SQL style guide by Simon Holywell](https://www.sqlstyle.guide/)
+2. [SQL Style Guide | The GitLab Handbook](https://handbook.gitlab.com/handbook/business-technology/data-team/platform/sql-style-guide/)
+3. [ERDCloud Library](https://www.erdcloud.com/library)
