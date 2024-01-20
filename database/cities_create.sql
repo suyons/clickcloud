@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS cities;
 
+USE clickcloud;
+
 CREATE TABLE cities (
     city_id INT NOT NULL UNIQUE,
     country_id CHAR(2) NOT NULL CHECK (REGEXP_LIKE(country_id, '[A-Z]{2}')),

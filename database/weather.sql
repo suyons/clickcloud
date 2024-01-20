@@ -4,6 +4,8 @@ DELETE FROM weather WHERE 1 = 1;
 
 SELECT * FROM weather;
 
+USE clickcloud;
+
 CREATE TABLE weather (
     weather_id INT NOT NULL UNIQUE,
     city_id INT NOT NULL UNIQUE,

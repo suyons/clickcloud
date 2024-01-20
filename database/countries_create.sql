@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS countries;
 
+USE clickcloud;
+
 CREATE TABLE countries (
     country_id CHAR(2) NOT NULL UNIQUE CHECK (REGEXP_LIKE(country_id, '[A-Z]{2}')),
     country_name VARCHAR(50) NOT NULL UNIQUE,
