@@ -16,7 +16,7 @@
 
     <!-- 받아온 날씨 데이터를 DB에 저장 -->
     <insert id="insertWeather" parameterType="clickcloud.server.dto.BriefWeather">
-        INSERT INTO weather_table (city_name, w_title, latitude, longitude)
+        INSERT INTO weather (city_name, w_title, latitude, longitude)
         VALUES (#{cityName}, #{wTitle}, #{latitude}, #{longitude})
     </insert>
 
