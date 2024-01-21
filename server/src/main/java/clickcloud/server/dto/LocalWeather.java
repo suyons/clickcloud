@@ -3,7 +3,7 @@ package clickcloud.server.dto;
 import lombok.Data;
 
 @Data
-public class DetailedWeather {
+public class LocalWeather {
     private String city_name;
     private String country_name;
     private String w_title;
@@ -23,4 +23,6 @@ public class DetailedWeather {
     private String sunset;
     private String time_update;
     private String timezone;
+
+    // Lombok을 통해 getter, setter, toString 등을 자동으로 생성
 }

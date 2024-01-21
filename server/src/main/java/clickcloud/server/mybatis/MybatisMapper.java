@@ -10,8 +10,20 @@ import clickcloud.server.dto.*;
 
 @Mapper
 public interface MybatisMapper {
-    @Select("SELECT city_name, w_title, latitude, longitude FROM weather JOIN cities USING (city_id)")
-	List<BriefWeather> getAllWeather();
-    @Select("SELECT city_name, country_name, w_title, w_description, temp_now, temp_feels, temp_min, temp_max, pressure, humidity, wind_speed, wind_deg, rain_1h, snow_1h, cloud, sunrise, sunset, time_update, timezone FROM weather JOIN cities USING (city_id) JOIN countries USING (country_id) WHERE city_name = #{city_name}")
-    DetailedWeather searchName(@Param("city_name") String city_name);
+    /**
+     * @function getAll
+     * @param timestamp (시간 단위)
+     * @return List<BriefWeather> (WHERE update_time BETWEEN #{timestamp} AND #{timestamp} + 30분)
+     */
+    @Select("CALL GetAllByTime(#{timestamp})")
+    List<GlobalWeather> getAllByTime(@Param("timestamp") long timestamp);
+
+    /**
+     * @function search
+     * @param city_name (영문 입력)
+     * @param timestamp (시간 단위)
+     * @return DetailedWeather (WHERE city_name = #{city_name} AND timestamp AND timestamp + 30분)
+     */
+    @Select("CALL SearchNameByTime(#{city_name}, #{timestamp})")
+    LocalWeather searchName(@Param("city_name") String city_name, @Param("timestamp") long timestamp);
 }
