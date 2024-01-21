@@ -12,20 +12,24 @@ import org.springframework.web.bind.annotation.RestController;
 import clickcloud.server.dto.BriefWeather;
 import clickcloud.server.dto.DetailedWeather;
 import clickcloud.server.mybatis.MybatisMapper;
+import clickcloud.server.service.WeatherService;
 
 @RestController
 @RequestMapping("/api")
 public class WeatherController {
     private final MybatisMapper mybatisMapper;
+    private final WeatherService weatherService;
 
     //생성자
-    public WeatherController(MybatisMapper mybatisMapper) {
+    public WeatherController(MybatisMapper mybatisMapper, WeatherService weatherService) {
         this.mybatisMapper = mybatisMapper;
+        this.weatherService = weatherService;
     }
 
     //GET - 전체 날씨 조회 api / 주요 100개 도시만 가져온다. (기존에 저장된 테이블에서 가져오면 됨)
     @GetMapping(value = "/getAllWeather", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<BriefWeather> getAllWeather() {
+        weatherService.updateAllWeather();
         return mybatisMapper.getAll();
     }
 

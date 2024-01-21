@@ -12,7 +12,7 @@ public class ScheduledService {
     private WeatherService weatherService;
 
     // 매 시간마다 업데이트
-    @Scheduled(cron = "0 0 * * * *")
+    // @Scheduled(cron = "0 * * * * *")
     public void updateWeatherHourly() {
          System.out.println("[Debug] Part 1 updated at "
          + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));

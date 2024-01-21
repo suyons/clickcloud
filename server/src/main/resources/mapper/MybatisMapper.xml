@@ -15,10 +15,22 @@
     </select>
 
     <!-- 받아온 날씨 데이터를 DB에 저장 -->
-    <insert id="insertWeather" parameterType="clickcloud.server.dto.BriefWeather">
-        INSERT INTO weather (city_name, w_title, latitude, longitude)
-        VALUES (#{cityName}, #{wTitle}, #{latitude}, #{longitude})
-    </insert>
+   <insert id="insertWeather" parameterType="clickcloud.server.dto.Weather">
+    INSERT INTO weather (
+        weather_id, city_id, w_title, w_description,
+        temp_now, temp_feels, temp_min, temp_max,
+        pressure, humidity, wind_speed, wind_deg,
+        rain_1h, snow_1h, cloud, sunrise, sunset, time_update
+     )
+    VALUES (
+        #{weather_id}, #{city_id}, #{w_title}, #{w_description},
+        #{temp_now, jdbcType=DOUBLE, javaType=java.lang.Double}, #{temp_feels, jdbcType=DOUBLE, javaType=java.lang.Double}, #{temp_min, jdbcType=DOUBLE, javaType=java.lang.Double}, #{temp_max, jdbcType=DOUBLE, javaType=java.lang.Double},
+        #{pressure}, #{humidity}, #{wind_speed}, #{wind_deg},
+        #{rain_1h, jdbcType=DOUBLE, javaType=java.lang.Double}, #{snow_1h, jdbcType=DOUBLE, javaType=java.lang.Double}, #{cloud}, #{sunrise}, #{sunset}, #{time_update}
+    )
+</insert>
+
+
 
 
     <!-- 주요도시 100개의 날씨 정보 한번에 불러오기 -->
