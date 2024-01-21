@@ -158,25 +158,16 @@
 
       // 구글 주요지점 마커찍는 부분 예시
       // function loadMarkersFromDB() {
-      //       $.ajax({
-      //           url: 'YOUR_DB_API_ENDPOINT', // Replace with your actual API endpoint
-      //           method: 'GET',
-      //           dataType: 'json',
-      //           success: function(data) {
-      //               // Loop through the data and add markers to the map
-      //               $.each(data, function(index, item) {
-      //                   var marker = new google.maps.Marker({
-      //                       position: {lat: parseFloat(item.latitude), lng: parseFloat(item.longitude)},
-      //                       map: map,
-      //                       title: item.title
-      //                   });
-      //               });
-      //           },
-      //           error: function(error) {
-      //               console.error('Error loading data from the database:', error);
-      //           }
+      //   $.getJSON('컨트롤러 엔드포인트', function (cities) {
+      //       $.each(cities, function (index, city) {
+      //           var marker = new google.maps.Marker({
+      //               position: {lat: parseFloat(city.latitude), lng: parseFloat(city.longitude)},
+      //               map: map,
+      //               title: city.cityName
+      //           });
       //       });
-      //   }
+      //   });
+      // }   
 
       // InfoWindow 내용
       var infoWindowContent = 
