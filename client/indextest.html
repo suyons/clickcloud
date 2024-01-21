@@ -137,23 +137,39 @@
     <!-- AIzaSyA-vW_ypSUXnvjMnX_VuR-gLLizAcdbhTI -->
   </div>
 
+  
   <script>
-    function initMap() {
-      // 서울의 좌표
-      var seoulLatLng = { lat: 37.5665, lng: 126.9780 };
-      
+    let map;
 
-      // 맵 생성
-      var map = new google.maps.Map(document.getElementById('map'), {
-        center: seoulLatLng,
-        zoom: 2
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 20, lng: -160 },
+        zoom: 2,
       });
 
-      // 서울에 마커 추가
-      var marker = new google.maps.Marker({
+      const script = document.createElement("script");
+
+      script.setAttribute(
+        "src",
+        "https://storage.googleapis.com/mapsdevsite/json/quakes.geo.json"
+      );
+      document.getElementsByTagName("head")[0].appendChild(script);
+    }
+
+    //마커 관련 함수
+    function city_marker(results) {
+    
+      for (let i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+      }
+      markers = [];  
+
+      // 서울에 마커 추가 > 추후 DB에서 마커 추가시 변경예정
+      const seoulLatLng = new google.maps.LatLng(37.5665, 126.9780); 
+      const cityMarker = new google.maps.Marker({
         position: seoulLatLng,
         map: map,
-        title: '서울'
+        title: 'Seoul'
       });
 
       // 구글 주요지점 마커찍는 부분 예시
@@ -178,62 +194,128 @@
       //       });
       //   }
 
-      // InfoWindow 내용
-      var infoWindowContent = 
-        '<div class="wContainer">' +
-        '<div class="city">Seoul</div>' +
-        '<div class="c_temp">20°C</div>' +
-        '<img src="https://github.com/mogri89/weatherapp/blob/main/images/clouds.png?raw=true" class="weather-icon">' +
-        '<div class="lh_temp"><span class="ltemp">20°C</span>' +
-        ' / <span class="htemp">30°C</span></div>' +
-        '<p><img src="images/humidity.png"> : <span class="humidity">55%</span> / ' +
-        '<img src ="images/wind.png"> : <span class="windspeed">1 km/h</span></p></div>';
 
-      // InfoWindow 생성
-      var infoWindow = new google.maps.InfoWindow({
-        content: infoWindowContent
+      // 마커 클릭시 나오는 infowindow 객체 내용물(변경해야함)
+      let InfoWindowContent = '<div class="wContainer">' +
+                                  '<div class="city">Seoul</div>' +
+                                  '<div class="c_temp">20°C</div>' +
+                                  '<img src="https://github.com/mogri89/weatherapp/blob/main/images/clouds.png?raw=true" class="weather-icon">' +
+                                  '<div class="lh_temp"><span class="ltemp">20°C</span>' +
+                                  ' / <span class="htemp">30°C</span></div>' +
+                                  '<p><img src="images/humidity.png"> : <span class="humidity">55%</span> / ' +
+                                  '<img src ="images/wind.png"> : <span class="windspeed">1 km/h</span></p></div>';
+                                    
+      
+      // 콘솔 출력 추가
+      console.log("InfoWindowContent:", InfoWindowContent);
+
+      // infowindow에 seoul 정보 추가
+      var googleInfoWindow = new google.maps.InfoWindow({
+        content: InfoWindowContent
       });
 
-      // 마커 클릭 이벤트 리스너 추가
-      marker.addListener('click', function () {
-        infoWindow.open(map, marker);
-      });
-    
-      //상단 아이콘 클릭시 페이지 새로고침
-      document.addEventListener('DOMContentLoaded', function () {
-        const navbarToggler = document.querySelector('.navbar-toggler');
-        const navbarCollapse = document.querySelector('.navbar-collapse');
-
-        navbarToggler.addEventListener('click', function () {
-          if (navbarCollapse.classList.contains('show')) {
-            navbarCollapse.classList.remove('show');
-          } else {
-            navbarCollapse.classList.add('show');
-          }
+      // 마커 클릭시 infowindow 오픈메서드
+      cityMarker.addListener('click', () => {
+        googleInfoWindow.open({
+          anchor: cityMarker,
+          map,
+          shouldFocus: false,
         });
       });
 
-      // 모바일용 아이콘 새로고침
-      document.addEventListener('DOMContentLoaded', function () {
-        const refreshIcon = document.getElementById('refresh');
+      // Save the markers to the global markers array
+      markers.push(cityMarker);
+    }  
 
-        refreshIcon.addEventListener('click', function () {
-          location.reload(true); 
-        });
+    let markers = [];
+
+    //페이지 로딩시 지도 초기화 
+    window.initMap = initMap;
+    window.city_marker = city_marker;
+
+    //상단 아이콘 클릭시 페이지 새로고침
+    document.addEventListener('DOMContentLoaded', function () {
+      const navbarToggler = document.querySelector('.navbar-toggler');
+      const navbarCollapse = document.querySelector('.navbar-collapse');
+
+      navbarToggler.addEventListener('click', function () {
+        if (navbarCollapse.classList.contains('show')) {
+          navbarCollapse.classList.remove('show');
+        } else {
+          navbarCollapse.classList.add('show');
+        }
       });
+    });
 
-      document.addEventListener('DOMContentLoaded', function () {
-      const avatarLink = document.getElementById('sidebarAvatar');
+    // 모바일용 아이콘 새로고침
+    document.addEventListener('DOMContentLoaded', function () {
+      const refreshIcon = document.getElementById('refresh');
 
-      avatarLink.addEventListener('click', function (event) {
-        event.preventDefault(); 
+      refreshIcon.addEventListener('click', function () {
         location.reload(true); 
-        });
       });
-    }
+    });
 
+    document.addEventListener('DOMContentLoaded', function () {
+    const avatarLink = document.getElementById('sidebarAvatar');
 
+    avatarLink.addEventListener('click', function (event) {
+      event.preventDefault(); 
+      location.reload(true); 
+    });
+  });
+  </script>
 
+  <!-- 검색 메서드 -->
+  <script>
+
+    
+    document.addEventListener('DOMContentLoaded', function () {
+      const apiKey = "38441e8dedceb6c9e64960261dea0d91";
+      const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+      const searchCity = document.querySelector(".searchCName input");
+      const searchBtn = document.querySelector(".searchCName button");
+      const weatherIcon = document.querySelector(".weather-icon");
+
+      async function checkWeather(city){
+        const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+        var data = await response.json();
+          
+
+        document.querySelector(".city").innerHTML = data.name;
+        document.querySelector(".c_temp").innerHTML = Math.round(data.main.temp) + "°c";
+        document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+        document.querySelector(".windspeed").innerHTML = data.wind.speed + " km/h";
+        document.querySelector(".ltemp").innerHTML = data.main.temp_min + "°c";
+        document.querySelector(".htemp").innerHTML = data.main.temp_max + "°c";
+
+        if (weatherIcon) {
+          const weatherMain = data.weather[0].main;
+          
+          if (weatherMain == "Clouds") {
+            weatherIcon.src = "https://github.com/mogri89/weatherapp/blob/main/images/clouds.png?raw=true";
+          } else if (weatherMain == "Clear") {
+            weatherIcon.src = "https://github.com/mogri89/weatherapp/blob/main/images/clear.png?raw=true";
+          } else if (weatherMain == "Rain") {
+            weatherIcon.src = "https://github.com/mogri89/weatherapp/blob/main/images/rain.png?raw=true";
+          } else if (weatherMain == "Drizzle") {
+            weatherIcon.src = "https://github.com/mogri89/weatherapp/blob/main/images/drizzle.png?raw=true";
+          } else if (weatherMain == "Mist") {
+            weatherIcon.src = "https://github.com/mogri89/weatherapp/blob/main/images/mist.png?raw=true";
+          }
+        } else {
+          console.error("weatherIcon not found");
+        }
+
+      }
+      
+      searchBtn.addEventListener("click", ()=>{
+      checkWeather(searchCity.value);
+    });
+
+      
+    });
   </script>
 
 </body>
