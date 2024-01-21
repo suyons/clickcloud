@@ -1,10 +1,10 @@
-DROP TABLE IF EXISTS weather;
+DROP TABLE IF EXISTS weather_2024;
 
-DELETE FROM weather WHERE 1 = 1;
+DELETE FROM weather_2024 WHERE 1 = 1;
 
-SELECT * FROM weather;
+SELECT * FROM weather_2024;
 
-CREATE TABLE weather (
+CREATE TABLE weather_2024 (
     weather_id INT NOT NULL UNIQUE,
     city_id INT NOT NULL UNIQUE,
     w_title VARCHAR(20) NOT NULL,
@@ -27,29 +27,33 @@ CREATE TABLE weather (
     FOREIGN KEY (city_id) REFERENCES cities(city_id)
 );
 
-INSERT INTO weather
-VALUES (
-        /* weather_id */ 8105,
-        /* city_id */ 1835848,
-        /* w_title */ 'Clear',
-        /* w_description */ 'clear sky',
-        /* temp_now */ 2.96,
-        /* temp_feels */ -0.39,
-        /* temp_min */ 2.69,
-        /* temp_max */ 3.66,
-        /* pressure */ 1012,
-        /* humidity */ 83,
-        /* wind_speed */ 3.6,
-        /* wind_deg */ 310,
-        /* rain_1h */ 2.31,
-        /* snow_1h */ NULL,
-        /* cloud */ 60,
-        /* sunrise */ 1705531499,
-        /* sunset */ 1705567137,
-        /* time_update */ 1705542138
-    );
+/*
+ * MOCK DATA
+ */
 
-INSERT INTO weather
+INSERT INTO weather_2024
+VALUES (
+    /* weather_id */ 8105,
+    /* city_id */ 1835848,
+    /* w_title */ 'Clear',
+    /* w_description */ 'clear sky',
+    /* temp_now */ 2.96,
+    /* temp_feels */ -0.39,
+    /* temp_min */ 2.69,
+    /* temp_max */ 3.66,
+    /* pressure */ 1012,
+    /* humidity */ 83,
+    /* wind_speed */ 3.6,
+    /* wind_deg */ 310,
+    /* rain_1h */ 2.31,
+    /* snow_1h */ NULL,
+    /* cloud */ 60,
+    /* sunrise */ 1705531499,
+    /* sunset */ 1705567137,
+    /* time_update */ 1705542138
+);
+
+INSERT INTO weather_2024
 VALUES (
     /* weather_id */ 2075535,
     /* city_id */ 2643743,
@@ -71,7 +75,7 @@ VALUES (
     /* time_update */ 1705557125
 );
 
-INSERT INTO weather
+INSERT INTO weather_2024
 VALUES (
     /* weather_id */ 2000314,
     /* city_id */ 524901,

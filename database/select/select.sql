@@ -1,9 +1,9 @@
 -- 테이블에 저장된 모든 도시의 날씨 제목과 좌표 불러오기
 SELECT city_name,
     w_title,
-    pos_x,
-    pos_y
-FROM weather
+    latitude,
+    longitude
+FROM weather_2024
     JOIN cities USING (city_id);
 
 /*
@@ -35,7 +35,7 @@ SELECT
     sunset,
     time_update,
     timezone
-FROM weather
+FROM weather_2024
     JOIN cities USING (city_id)
     JOIN countries USING (country_id)
 WHERE city_name = 'Seoul';
