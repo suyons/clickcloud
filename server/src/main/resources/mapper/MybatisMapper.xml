@@ -8,12 +8,27 @@
 
   <!-- id : 메서드 이름 지정 / resultType : 결과를 매핑할 Java 객체 클래스 -->
 
+    <!-- 모든 cityId 가져오기 -->
+    <select id="getCityId">
+        SELECT city_id
+        FROM cities
+    </select>
+
+    <!-- 받아온 날씨 데이터를 DB에 저장 -->
+    <insert id="insertWeather" parameterType="clickcloud.server.dto.BriefWeather">
+        INSERT INTO weather_table (city_name, w_title, latitude, longitude)
+        VALUES (#{cityName}, #{wTitle}, #{latitude}, #{longitude})
+    </insert>
+
+
+    <!-- 주요도시 100개의 날씨 정보 한번에 불러오기 -->
     <select id="getAll" resultType="clickcloud.server.dto.BriefWeather">
         SELECT city_name, w_title, latitude, longitude
         FROM weather
         JOIN cities USING (city_id)
     </select>
-  
+    
+    <!-- 특정 도시 이름을 파라미터로 받아 해당 도시 상세 날씨 정보 조회 -->
     <select id="searchName" resultType="clickcloud.server.dto.DetailedWeather" parameterType="String">
         SELECT city_name, country_name, w_title, w_description, temp_now, temp_feels, temp_min, temp_max,
                pressure, humidity, wind_speed, wind_deg, rain_1h, snow_1h, cloud, sunrise, sunset, time_update,
