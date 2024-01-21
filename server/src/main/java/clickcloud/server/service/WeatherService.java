@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -26,7 +27,7 @@ public class WeatherService {
     //전체 도시 날씨 데이터 업데이트(저장)------------------------------------------------------
     public void updateAllWeather() {
         //모든 도시 목록 가져오기
-        List<Integer> cityIds = mybatisMapper.getCityId();
+        List<Integer> cityIds = mybatisMapper.getAllCityId();
 
         for(int city_id : cityIds) {
             //city_id로 날씨 정보 가져오기
@@ -41,9 +42,8 @@ public class WeatherService {
         //city_name으로 오픈웨더에서 날씨 정보 가져와서 
         String Data = weatherApiService.getDataToName(city_name);
         //DB에 저장
-        saveWeatherDB(Data); //날씨 테이블
         saveCitiesDB(Data); //도시 테이블
-
+        saveWeatherDB(Data); //날씨 테이블
     }
 
     // 받아온 날씨 데이터 DB에 저장
