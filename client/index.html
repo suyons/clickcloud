@@ -25,25 +25,23 @@
 
 <body class="group-layouts group-sidebar-layouts component-layout-sidebar-2 vsc-initialized">
   <div class="d-flex flex-column flex-lg-row h-lg-full bg-gray-100">
-    <!-- Vertical Navbar -->
+    <!-- navbar -->
     <nav
       class="navbar show navbar-vertical h-lg-screen navbar-expand-lg px-0 py-3 py-lg-0 navbar-light bg-light border-end-lg"
       id="navbarVertical">
       <div class="container-fluid">
-        <!-- Toggler -->
+        <!-- 햄버거 버튼 -->
         <button class="navbar-toggler ms-n2" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"
           aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <!-- Brand -->
+        <!-- click cloud 아이콘 -->
         <a class="navbar-brand py-lg-5 mb-lg-5 px-lg-6 me-0" href="#">
           <img src="https://www.shareicon.net/download/2016/08/18/816084_cloud.svg" class="img-fluid bg-light" id="refresh">
         </a>
-        <!-- User menu (mobile) -->
+        <!-- 모바일용 navbar -->
         <div class="navbar-user d-lg-none">
-          <!-- Dropdown -->
           <div class="dropdown">
-            <!-- Toggle -->
             <a href="#" id="sidebarAvatar" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
               <div class="avatar text-white">
@@ -51,30 +49,17 @@
                   src="https://www.shareicon.net/download/2016/08/18/816084_cloud.svg" id="refresh">
               </div>
             </a>
-            <!-- Menu -->
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-              <div class="dropdown-item">
-                <span class="d-block text-sm text-muted mb-1">Signed in as</span>
-                <span class="d-block text-heading font-semibold">Heather Wright</span>
-              </div>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Separated link</a>
-            </div>
           </div>
         </div>
-        <!-- Collapse -->
         <div class="collapse navbar-collapse" id="sidebarCollapse">
+          <!-- 검색버튼 -->
           <div class="searchCName">
             <form class="d-flex p-2">
               <input class="form-control me-2" action="" type="text" placeholder="City Name" aria-label="Search">
               <button class="btn btn-outline-success mt-3 p-2" type="button">Search</button>
             </form>
           </div>
-        <!-- Navigation -->  
+        <!-- navbar 상세메뉴들 -->  
           <ul class="navbar-nav">  
             <li class="nav-item">
               <a class="nav-link" href="#">
@@ -104,9 +89,9 @@
               </a>
             </li>
           </ul>
-          <!-- Divider -->
+          <!-- navbar 분할선 -->
           <hr class="navbar-divider my-5 opacity-20">
-          <!-- Navigation -->
+          <!-- navbar 하단부 -->
           <ul class="navbar-nav mb-md-4">
             <li class="nav-item">
               <a class="nav-link" href="#">
@@ -121,9 +106,7 @@
               </a>
             </li>
           </ul>
-          <!-- Push content down -->
           <div class="mt-auto"></div>
-          <!-- User (md) -->
           <ul class="navbar-nav mb-5">
             <li class="nav-item">
               <a class="nav-link" href="#">
@@ -139,7 +122,7 @@
         </div>
       </div>
     </nav>
-    <!-- Main content -->
+    <!-- 구글맵 api -->
     <div class="h-screen px-3 px-lg-7 flex-grow-1 overflow-y-lg-auto" id="map">
       <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAaDORY0JJFdyxxANCamZe-N6fD7tvZDVU&callback=initMap&v=weekly"
@@ -158,19 +141,6 @@
         zoom: 2,
       });
 
-      // infoWindow = new google.maps.InfoWindow({
-      //   content: '<div class="wContainer"><div class="city">Seoul</div>' +
-      //            '<div class="c_temp">20°c</div>' +
-      //            '<img src=images/clear.png>' +
-      //            '<div class="lh_temp">최저온도 : <span class="ltemp">20°c</span>' +
-      //            ' / 최고온도 : <span class="htemp">30°c</span></div>' +
-      //            '<p>습도 : <span class="humidity">55%</span> / ' +
-      //            '풍속 : <span class="windspeed">1 km/h</span></p></div>'
-      // });
-
-      // Get the earthquake data (JSONP format)
-      // This feed is a copy from the USGS feed, you can find the originals here:
-      //   http://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
       const script = document.createElement("script");
 
       script.setAttribute(
@@ -180,58 +150,40 @@
       document.getElementsByTagName("head")[0].appendChild(script);
     }
 
-    // Defines the callback function referenced in the jsonp file.
-    // function eqfeed_callback(results) {
-
-    //   for (let i = 0; i < results.features.length; i++) {
-    //     const coords = results.features[i].geometry.coordinates;
-
-    //     const latLng = new google.maps.LatLng(coords[1], coords[0]);
-    //     const marker = new google.maps.Marker({
-    //       position: latLng,
-    //       map: map,
-    //     });
-
-    //     const f = results.features[i].properties;
-
-    //     marker.addListener("click", (e) => {
-    //       // const d = new Date(0);
-    //       // d.setUTCMilliseconds(f.time);
-
-    //       // const contentString =
-    //       //   '<div class="info-window-content">' +
-    //       //   '<h2>' + f.place + '</h2>' +
-    //       //   '<h3>Magnitude ' + f.mag + '</h3><p>' + d.toString() + '</p>' +
-    //       //   '<a href="' + f.url + '" target="new">View on USGS</a>' +
-    //       //   '</div>';
-
-    //       // infoWindow.setContent(contentString);
-    //       infoWindow.open({
-    //         anchor: marker,
-    //         map,
-    //         shouldFocus: false,
-    //       });
-
-    //     });
-    //   }
-    // }
-
-      function eqfeed_callback(results) {
-      // Remove existing markers
+    //마커 관련 함수
+    function city_marker(results) {
+    
       for (let i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
       }
-      markers = [];  // Clear the markers array
+      markers = [];  
 
-      // Add marker for Seoul
-      const seoulLatLng = new google.maps.LatLng(37.5665, 126.9780);  // Coordinates for Seoul
+      // 서울에 마커 추가 > 추후 DB에서 마커 추가시 변경예정
+      const seoulLatLng = new google.maps.LatLng(37.5665, 126.9780); 
       const cityMarker = new google.maps.Marker({
         position: seoulLatLng,
         map: map,
         title: 'Seoul'
       });
 
-      // Info window content for Seoul
+      // 구글 주요지점 마커찍는 부분 예시
+      // <?
+      // $query = "select from map"
+      // $result = mysqli_query($connect, $query)
+      // ?>
+
+      // while($data = mysqli_fetch_array($result)){
+      //   const cityLatLng<?=$data[idx]?>
+
+      //   new google.maps.Marker(
+      //     position: cityLatLng<?=$data[idx]?> = {lat: <?=$data[lat]?>, lng: <?=$data[lng]?>}
+      //     map: map,
+      //     title: "<?=$data[title]?>"
+      //   )
+      // }
+
+
+      // 마커 클릭시 나오는 infowindow 객체 내용물(변경해야함)
       let InfoWindowContent = '<div class="wContainer">' +
                                   '<div class="city">Seoul</div>' +
                                   '<div class="c_temp">20°C</div>' +
@@ -245,11 +197,12 @@
       // 콘솔 출력 추가
       console.log("InfoWindowContent:", InfoWindowContent);
 
-      // Info window for Seoul
+      // infowindow에 seoul 정보 추가
       const googleInfoWindow = new google.maps.InfoWindow({
         content: InfoWindowContent
       });
 
+      // 마커 클릭시 infowindow 오픈메서드
       cityMarker.addListener('click', () => {
         googleInfoWindow.open({
           anchor: cityMarker,
@@ -264,26 +217,25 @@
 
     let markers = [];
 
+    //페이지 로딩시 지도 초기화 
     window.initMap = initMap;
-    window.eqfeed_callback = eqfeed_callback;
-  </script>
-  <!-- 상단 아이콘 클릭시 페이지 새로고침 -->
-  <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        const navbarToggler = document.querySelector('.navbar-toggler');
-        const navbarCollapse = document.querySelector('.navbar-collapse');
+    window.city_marker = city_marker;
 
-        navbarToggler.addEventListener('click', function () {
-          if (navbarCollapse.classList.contains('show')) {
-            navbarCollapse.classList.remove('show');
-          } else {
-            navbarCollapse.classList.add('show');
-          }
-        });
+    //상단 아이콘 클릭시 페이지 새로고침
+    document.addEventListener('DOMContentLoaded', function () {
+      const navbarToggler = document.querySelector('.navbar-toggler');
+      const navbarCollapse = document.querySelector('.navbar-collapse');
+
+      navbarToggler.addEventListener('click', function () {
+        if (navbarCollapse.classList.contains('show')) {
+          navbarCollapse.classList.remove('show');
+        } else {
+          navbarCollapse.classList.add('show');
+        }
       });
-  </script>
-  <!-- 아이콘 새로고침 코드 추가 -->
-  <script>
+    });
+
+    // 모바일용 아이콘 새로고침
     document.addEventListener('DOMContentLoaded', function () {
       const refreshIcon = document.getElementById('refresh');
 
@@ -296,8 +248,8 @@
     const avatarLink = document.getElementById('sidebarAvatar');
 
     avatarLink.addEventListener('click', function (event) {
-      event.preventDefault(); // 기본 동작을 막음 (페이지 이동)
-      location.reload(true); // true를 전달하여 캐시를 무시하고 강제로 새로고침
+      event.preventDefault(); 
+      location.reload(true); 
     });
   });
   </script>
