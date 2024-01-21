@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import clickcloud.server.dto.Cities;
 import clickcloud.server.dto.Weather;
 import clickcloud.server.mybatis.MybatisMapper;
 
@@ -22,19 +23,27 @@ public class WeatherService {
     @Autowired
     private MybatisMapper mybatisMapper;
 
-    //전체 도시 날씨 데이터 업데이트------------------------------------------------------
+    //전체 도시 날씨 데이터 업데이트(저장)------------------------------------------------------
     public void updateAllWeather() {
-
-
         //모든 도시 목록 가져오기
         List<Integer> cityIds = mybatisMapper.getCityId();
 
         for(int city_id : cityIds) {
             //city_id로 날씨 정보 가져오기
-            String weatherData = weatherApiService.getWeatherData(city_id);
+            String weatherData = weatherApiService.getWeatherToId(city_id);
+            //날씨 테이블에 저장하기
             saveWeatherDB(weatherData);
-        
         }
+    }
+
+    //특정 도시의 도시 정보, 날씨 정보 데이터 업데이트(저장)--------------------------------------
+    public void getSearchedData(String city_name) {
+        //city_name으로 오픈웨더에서 날씨 정보 가져와서 
+        String Data = weatherApiService.getDataToName(city_name);
+        //DB에 저장
+        saveWeatherDB(Data); //날씨 테이블
+        saveCitiesDB(Data); //도시 테이블
+
     }
 
     // 받아온 날씨 데이터 DB에 저장
@@ -63,8 +72,8 @@ public class WeatherService {
             int sunset = jsonNode.path("sys").path("sunset").asInt();
             int time_update = jsonNode.path("dt").asInt();
             
-            //데이터 베이스에 저장하는 로직 
-            WeatherDB(weather_id, city_id, w_title, w_description, temp_now, temp_feels, temp_min, temp_max, pressure,
+            //데이터 베이스에 저장 - Weather 테이블
+            weatherDB(weather_id, city_id, w_title, w_description, temp_now, temp_feels, temp_min, temp_max, pressure,
             humidity, wind_speed, wind_deg, rain_1h, snow_1h, cloud, sunrise, sunset, time_update);
 
         } catch (JsonProcessingException e) {
@@ -74,15 +83,15 @@ public class WeatherService {
     
     }
 
-    //mybatis로 db저장
-    private void WeatherDB(
+    //mybatis로 db저장- weather 테이블
+    private void weatherDB(
         int weather_id, int city_id, String w_title, String w_description, double temp_now, double temp_feels, double temp_min,
         double temp_max, int pressure, int humidity, double wind_speed, int wind_deg, Double rain_1h, Double snow_1h, int cloud,
         int sunrise, int sunset, int time_update){
 
         //MyBatis 사용해서 DB에 저장
         Weather weather = new Weather();
-        
+
          //sys의 id가 없는 경우가 있다 => weather_id가 중복됨 ㅠ
          if(weather_id != 0){
             weather.setWeather_id(weather_id);
@@ -117,7 +126,45 @@ public class WeatherService {
 
     }
     
+     // 받아온 도시 데이터 DB에 저장
+     public void saveCitiesDB(String citiesData){
+        try {
+            //JSON 데이터 파싱
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(citiesData); //readTree() : JSON 데이터를 나타내는 문자열을 파싱하여 JsonNode 객체로 변환
 
-    // 특정 도시 날씨 
+            int city_id = jsonNode.path("id").asInt();
+            String country_id = jsonNode.path("sys").path("country").asText();
+            String city_name = jsonNode.path("name").asText();
+            double latitude = jsonNode.path("coord").path("lat").asDouble();
+            double longitude = jsonNode.path("coord").path("lon").asDouble();
+            int timezone = jsonNode.path("timezone").asInt();
+            
+            //데이터 베이스에 저장 - Cities 테이블
+            citiesDB(city_id, country_id, city_name, latitude, longitude, timezone);
+
+        } catch (JsonProcessingException e) {
+        // 예외 처리: JSON 데이터 파싱 중에 오류가 발생한 경우
+            e.printStackTrace(); 
+        }
+    } 
+
+    //mybatis로 db저장- cities 테이블
+    private void citiesDB(
+        int city_id, String country_id, String city_name,
+        double latitude, double longitude, int timezone){
+
+        //MyBatis 사용해서 DB에 저장
+        Cities cities = new Cities();
+        
+        cities.setCity_id(city_id);
+        cities.setCountry_id(country_id);
+        cities.setCity_name(city_name);
+        cities.setLatitude(latitude);
+        cities.setLongitude(longitude);
+        cities.setTimezone(timezone);
+        
+        mybatisMapper.insertCities(cities);
+    }
 
 }

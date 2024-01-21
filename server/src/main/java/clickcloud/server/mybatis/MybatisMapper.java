@@ -20,6 +20,9 @@ public interface MybatisMapper {
     // 오픈웨더에서 가져온 날씨 정보 Weather table에 저장
     void insertWeather(Weather weather);
 
+    // 오픈웨더에서 가져온 도시 정보 Cities table에 저장
+    void insertCities(Cities cities);
+
     //모든 city_id 가져오기
     List<Integer> getCityId();
 }

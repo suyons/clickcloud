@@ -29,14 +29,21 @@ public class WeatherController {
     //GET - 전체 날씨 조회 api / 주요 100개 도시만 가져온다. (기존에 저장된 테이블에서 가져오면 됨)
     @GetMapping(value = "/getAllWeather", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<BriefWeather> getAllWeather() {
+        // 전체 날씨 업데이트 - 1시간마다 해야함(아직 구현X - 날씨데이터 아예 없을 때 첫 생성만 해놓음)
         weatherService.updateAllWeather();
+        // DB에서 전체 날씨 정보 데이터 가져오기
         return mybatisMapper.getAll();
     }
 
-    //POST - 세부 날씨 조회 api(검색) - 기존 저장된 데이터 + 오픈웨더api 데이터 중에서 찾는다. / 조회한걸 왜올려.? 조회한 목록 보기..?
-    //바디파라미터..?@ResponseBody / db에 올려..?
+    //POST - 세부 날씨 조회 api(검색) - 기존 저장된 데이터 + 오픈웨더api 데이터 중에서 찾는다. 
     @PostMapping(value = "/searchName/{city_name}", produces = MediaType.APPLICATION_JSON_VALUE)
     public DetailedWeather searchName(@PathVariable("city_name") String city_name) {
+
+        // 만약 기존 DB에 데이터가 없다면 api로 새로운 데이터 DB에 저장하고 => return문 :  데이터 가져오기
+        if(mybatisMapper.searchName(city_name) == null){ //★
+            weatherService.getSearchedData(city_name);
+        }
+        // 만약 기존 DB에 데이터가 있다면 그냥 바로 날씨 세부 정보 데이터 가져오기
         return mybatisMapper.searchName(city_name);
     }
 }
