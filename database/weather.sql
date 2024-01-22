@@ -8,7 +8,7 @@ USE clickcloud;
 
 CREATE TABLE weather (
     weather_id INT NOT NULL UNIQUE,
-    city_id INT NOT NULL UNIQUE,
+    city_id INT NOT NULL,
     w_title VARCHAR(20) NOT NULL,
     w_description VARCHAR(50) NOT NULL,
     temp_now DECIMAL(4, 2) NOT NULL,

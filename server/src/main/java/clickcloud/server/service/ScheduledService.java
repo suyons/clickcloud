@@ -15,7 +15,7 @@ public class ScheduledService {
     //100개의 요청을 20개씩 나눠서 5분동안 1분간격으로 업데이트할거임
 
     // 매 시간 1분마다 20개 요청
-    @Scheduled(cron = "0 1 * * * *") //
+    @Scheduled(cron = "0 54 * * * *") //
     public void updateWeatherHourly1() {
          System.out.println("[Debug] Part 1 updated at "
          + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
@@ -25,7 +25,7 @@ public class ScheduledService {
     }
 
     // 매 시간 2분마다 20개 요청
-    @Scheduled(cron = "0 2 * * * *") //
+    @Scheduled(cron = "0 55 * * * *") //
     public void updateWeatherHourly2() {
          System.out.println("[Debug] Part 2 updated at "
          + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
@@ -35,7 +35,7 @@ public class ScheduledService {
     }
 
     // 매 시간 3분마다 20개 요청
-    @Scheduled(cron = "0 3 * * * *") //
+    @Scheduled(cron = "0 56 * * * *") //
     public void updateWeatherHourly3() {
          System.out.println("[Debug] Part 3 updated at "
          + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
@@ -45,7 +45,7 @@ public class ScheduledService {
     }
 
     // 매 시간 3분마다 20개 요청
-    @Scheduled(cron = "0 4 * * * *") //
+    @Scheduled(cron = "0 57 * * * *") //
     public void updateWeatherHourly4() {
          System.out.println("[Debug] Part 4 updated at "
          + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
@@ -55,7 +55,7 @@ public class ScheduledService {
     }
 
     // 매 시간 4분마다 20개 요청
-    @Scheduled(cron = "0 5 * * * *") //
+    @Scheduled(cron = "0 58 * * * *") //
     public void updateWeatherHourly5() {
          System.out.println("[Debug] Part 5 updated at "
          + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));

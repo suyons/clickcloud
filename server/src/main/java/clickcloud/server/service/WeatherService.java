@@ -190,7 +190,7 @@ public class WeatherService {
         weather.setTime_update(time_update);
         
 
-        mybatisMapper.updateWeather(weather);
+        mybatisMapper.insertWeather(weather);
 
     }
 
