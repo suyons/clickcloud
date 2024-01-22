@@ -34,7 +34,7 @@
         return;
       }
 
-      // Call OpenWeatherMap API to get weather information
+      
       $.ajax({
         url: `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${cityName}&appid=38441e8dedceb6c9e64960261dea0d91`,
         method: 'GET',
@@ -42,24 +42,24 @@
           if (data.coord) {
             var latLng = { lat: data.coord.lat, lng: data.coord.lon };
 
-            // Clear existing marker
+            //마커초기화
             if (marker) {
               marker.setMap(null);
             }
 
-            // Create a new marker
+            //마커생성
             marker = new google.maps.Marker({
               position: latLng,
               map: map,
               title: cityName
             });
 
-            // Add click event listener to marker
+            //마커에 클릭 이벤트핸들링
             marker.addListener('click', function () {
               showInfoWindow(data);
             });
 
-            // Set map center to the marker position
+            // 마커로 이동
             map.setCenter(latLng);
             map.setZoom(10);
           } else {
@@ -73,7 +73,7 @@
     }
 
     function showInfoWindow(data) {
-      // Display additional weather information in a window
+      // 인포윈도우 객체 생성
       var contentString = createInfoWindowContent(data);
 
       var infowindow = new google.maps.InfoWindow({
@@ -146,7 +146,7 @@
       `;
     }
 
-    // Current time update function
+    // 현재시각 동적으로
     function timeNow() {
       const currentTimeMethod = document.getElementById('currentTime');
       if (currentTimeMethod) {
@@ -154,8 +154,7 @@
         currentTimeMethod.innerText = currentTime.toLocaleString();
       }
     }
-
-    // Set interval to update current time every second
+    
     setInterval(timeNow, 1000);
   </script>
 </body>
