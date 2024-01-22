@@ -5,7 +5,7 @@ DELETE FROM weather_2024 WHERE 1 = 1;
 SELECT * FROM weather_2024;
 
 CREATE TABLE weather_2024 (
-    weather_id INT NOT NULL UNIQUE,
+    weather_id INT NOT NULL UNIQUE AUTO_INCREMENT,
     city_id INT NOT NULL UNIQUE,
     w_title VARCHAR(20) NOT NULL,
     w_description VARCHAR(50) NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE weather_2024 (
 
 INSERT INTO weather_2024
 VALUES (
-    /* weather_id */ 8105,
+    /* weather_id */ null,
     /* city_id */ 1835848,
     /* w_title */ 'Clear',
     /* w_description */ 'clear sky',
@@ -55,7 +55,7 @@ VALUES (
 
 INSERT INTO weather_2024
 VALUES (
-    /* weather_id */ 2075535,
+    /* weather_id */ null,
     /* city_id */ 2643743,
     /* w_title */ 'Clear',
     /* w_description */ 'clear sky',
@@ -77,7 +77,7 @@ VALUES (
 
 INSERT INTO weather_2024
 VALUES (
-    /* weather_id */ 2000314,
+    /* weather_id */ null,
     /* city_id */ 524901,
     /* w_title */ 'Clouds',
     /* w_description */ 'broken clouds',
