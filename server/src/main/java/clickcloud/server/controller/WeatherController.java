@@ -1,6 +1,5 @@
 package clickcloud.server.controller;
 
-import java.sql.Time;
 import java.time.Instant;
 import java.util.List;
 
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import clickcloud.server.dto.BriefWeather;
 import clickcloud.server.mybatis.MybatisMapper;
@@ -35,7 +33,7 @@ public class WeatherController {
     @GetMapping(value = "/getAllWeather", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<BriefWeather> getAllWeather() {
         int currentTime = (int) Instant.now().getEpochSecond(); //현재 시간 (초단위) 가져오기
-        if(mybatisMapper.getAll(currentTime) == null){ //데이터 dt가 현재 시간보다 한시간 전에 저장된 
+        if(mybatisMapper.getWeatherId()== null){ //데이터 dt가 현재 시간보다 한시간 전에 저장된 
             weatherService.firstUpdateWeather();
         }
         // DB에 이미 정보 있으면 가장 최신 정보(time_update사용) 조회
@@ -50,10 +48,12 @@ public class WeatherController {
         if(mybatisMapper.searchName(city_name) != null){ 
            return mybatisMapper.searchName(city_name);
         }  // 없다면 api로 불러와서 보여주기
+        System.out.println("데이터 베이스 내부에 해당 지역이 없습니다.");
         String weatherData = weatherApiService.getWeatherByName(city_name); //api로 날씨데이터 받아오기
 
         try {
             return weatherService.getWeatherByName(weatherData);
+            
         } catch (Exception e) {
             // 예외 처리
             e.printStackTrace();

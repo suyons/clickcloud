@@ -165,10 +165,10 @@ public class WeatherService {
          //기존 테이블에 weather_id null이면 1반환 null아니면 +1 반환
          if(weather_id == null){
             weather.setWeather_id(1);
+            System.out.println("weather_id가 0이므로 1을 부여했습니다");
          } else {
             weather_id += 1;
             weather.setWeather_id(weather_id);
-            System.out.println("weather_id가 0이므로 1을 부여했습니다");
          }
         
         weather.setCity_id(city_id);
@@ -190,7 +190,7 @@ public class WeatherService {
         weather.setTime_update(time_update);
         
 
-        mybatisMapper.insertWeather(weather);
+        mybatisMapper.updateWeather(weather);
 
     }
 

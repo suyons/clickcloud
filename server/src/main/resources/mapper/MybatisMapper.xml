@@ -17,6 +17,7 @@
         WHERE time_update BETWEEN #{currentTime} - 3600 AND  #{currentTime} 
     </select>
 
+
     <!-- 모든 cityId 가져오기 / 필요-->
     <select id="getAllCityId">
         SELECT city_id
@@ -36,8 +37,8 @@
     </select>
 
     <!-- 받아온 날씨 데이터를 DB에 저장 -->
-   <insert id="insertWeather" parameterType="clickcloud.server.dto.Weather">
-        INSERT INTO weather (
+   <update id="updateWeather" parameterType="clickcloud.server.dto.Weather">
+        <!-- INSERT INTO weather (
             weather_id, city_id, w_title, w_description,
             temp_now, temp_feels, temp_min, temp_max,
             pressure, humidity, wind_speed, wind_deg,
@@ -45,11 +46,31 @@
         )
         VALUES (
             #{weather_id}, #{city_id}, #{w_title}, #{w_description},
-            #{temp_now, jdbcType=DOUBLE, javaType=java.lang.Double}, #{temp_feels, jdbcType=DOUBLE, javaType=java.lang.Double}, #{temp_min, jdbcType=DOUBLE, javaType=java.lang.Double}, #{temp_max, jdbcType=DOUBLE, javaType=java.lang.Double},
+            #{temp_now}, #{temp_feels}, #{temp_min}, #{temp_max},
             #{pressure}, #{humidity}, #{wind_speed}, #{wind_deg},
-            #{rain_1h, jdbcType=DOUBLE, javaType=java.lang.Double}, #{snow_1h, jdbcType=DOUBLE, javaType=java.lang.Double}, #{cloud}, #{sunrise}, #{sunset}, #{time_update}
-        )
-    </insert>
+            #{rain_1h}, #{snow_1h}, #{cloud}, #{sunrise}, #{sunset}, #{time_update}
+        ) -->
+        UPDATE weather
+        SET
+            w_title = #{w_title},
+            w_description = #{w_description},
+            temp_now = #{temp_now},
+            temp_feels = #{temp_feels},
+            temp_min = #{temp_min},
+            temp_max = #{temp_max},
+            pressure = #{pressure},
+            humidity = #{humidity},
+            wind_speed = #{wind_speed},
+            wind_deg = #{wind_deg},
+            rain_1h = #{rain_1h},
+            snow_1h = #{snow_1h},
+            cloud = #{cloud},
+            sunrise = #{sunrise},
+            sunset = #{sunset},
+            time_update = #{time_update}
+        WHERE
+            weather_id = #{weather_id} AND city_id = #{city_id};
+    </update>
 
     
     <!-- weather 테이블의 weather_id가져오기 -->

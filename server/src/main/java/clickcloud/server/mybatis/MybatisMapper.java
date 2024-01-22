@@ -12,7 +12,7 @@ import clickcloud.server.dto.*;
 @Mapper
 public interface MybatisMapper {
     // 100개 도시 데이터 불러오기
-    List<BriefWeather> getAll(int time_update);
+    List<BriefWeather> getAll(int currentTime); 
 
     //모든 city_id 가져오기
     List<Integer> getAllCityId();
@@ -21,7 +21,7 @@ public interface MybatisMapper {
     DetailedWeather searchName(@Param("city_name") String city_name);
 
     // 오픈웨더에서 가져온 날씨 정보 Weather table에 저장 
-    void insertWeather(Weather weather);
+    void updateWeather(Weather weather);
 
     //weather 테이블의 weather_id가져오기 
     Integer getWeatherId();
