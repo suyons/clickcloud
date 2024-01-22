@@ -14,7 +14,7 @@ public class WeatherApiService {
     private String apiKey;
 
     //cityId로 url 생성
-    public String getWeatherToId(int cityId) {
+    public String getWeatherById(Integer cityId) {
         // OpenWeatherMap API 엔드포인트 URL
         String apiUrl = "http://api.openweathermap.org/data/2.5/weather?units=metric&id=" + cityId + "&appid=" + apiKey;
 
@@ -35,7 +35,7 @@ public class WeatherApiService {
     }
 
     //cityName으로 url 생성
-    public String getDataToName(String cityName){
+    public String getWeatherByName(String cityName){
         // OpenWeatherMap API 엔드포인트 URL
         String apiUrl = "http://api.openweathermap.org/data/2.5/weather?units=metric&q=" + cityName + "&appid=" + apiKey;
 

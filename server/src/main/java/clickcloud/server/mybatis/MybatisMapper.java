@@ -11,24 +11,19 @@ import clickcloud.server.dto.*;
 
 @Mapper
 public interface MybatisMapper {
-    // 여러 도시의 간단한 날씨 정보 데이터를 불러온다 (XML 파일에서 SQL이 정의됨)
-    List<BriefWeather> getAll();
-
-    // 특정 도시 이름을 파라미터로 받아 해당 도시의 상세 날씨 정보를 조회한다 (XML 파일에서 SQL이 정의됨)
-    DetailedWeather searchName(@Param("city_name") String city_name);
-
-    // 오픈웨더에서 가져온 날씨 정보 Weather table에 저장
-    void insertWeather(Weather weather);
-
-    // 오픈웨더에서 가져온 도시 정보 Cities table에 저장
-    void insertCities(Cities cities);
+    // 100개 도시 데이터 불러오기
+    List<BriefWeather> getAll(int time_update);
 
     //모든 city_id 가져오기
     List<Integer> getAllCityId();
 
-    //모든 city_name 가져오기
-    List<String> getAllCityName();
+    // 특정 도시 상세 날씨 정보 불러오기
+    DetailedWeather searchName(@Param("city_name") String city_name);
 
-    //weather 테이블의 weather_id(sys의 id)가져오기
+    // 오픈웨더에서 가져온 날씨 정보 Weather table에 저장 
+    void insertWeather(Weather weather);
+
+    //weather 테이블의 weather_id가져오기 
     Integer getWeatherId();
+
 }
