@@ -7,17 +7,19 @@
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.0/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://unpkg.com/@webpixels/css@1.1.93/dist/index.css">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <!-- <script src="maps_config.js"></script> -->
   <style>
-    .city{
-      font-size: 20px;
+    h2{
+      color: white;
     }
     .wContainer{
       text-align: center;
       background : linear-gradient(to left bottom, #81d2f8, #24b8fe);
+      color: white;
     }
-    .c_temp{
-      font-size: 40px;
+    .temp{
+      font-size: 30px;
     }
   </style>
   <title>Clickcloud 날씨 지도</title>
@@ -53,18 +55,15 @@
         </div>
         <div class="collapse navbar-collapse" id="sidebarCollapse">
           <!-- 검색버튼 -->
-          <div class="searchCName">
-            <form class="d-flex p-2">
+          <form class="d-flex flex-column p-2">
+            <div class="searchCName">
               <input class="form-control me-2" action="" type="text" placeholder="City Name" aria-label="Search">
-              <button class="btn btn-outline-success mt-3 p-2" type="button">Search</button>
-            </form>
-          </div>
-          <div class="searchTime">
-            <form class="d-flex p-2">
+            </div>
+            <div class="searchTime mb-2">
               <input class="form-control me-2" action="" type="datetime-local" placeholder="time" aria-label="Search" min="2024-01-22T09:00">
-              <button class="btn btn-outline-success mt-3 p-2" type="button">search</button>
-            </form>
-          </div>
+            </div>
+            <button class="btn btn-outline-success mt-3 p-2 ms-auto" type="button">search</button>
+          </form>
         <!-- navbar 상세메뉴들 -->  
           <ul class="navbar-nav">  
             <li class="nav-item">
@@ -138,90 +137,192 @@
   </div>
 
   <script>
+    var map; // 맵 전역 변수 선언
+
     function initMap() {
-      // 서울의 좌표
+      // 서울의 좌표(초기 중앙화면)
       var seoulLatLng = { lat: 37.5665, lng: 126.9780 };
-      
 
       // 맵 생성
-      var map = new google.maps.Map(document.getElementById('map'), {
+      map = new google.maps.Map(document.getElementById('map'), {
         center: seoulLatLng,
         zoom: 2
       });
 
-      // 서울에 마커 추가
-      var marker = new google.maps.Marker({
-        position: seoulLatLng,
-        map: map,
-        title: '서울'
-      });
+      // DB에서 좌표를 가져와서 마커 찍어주는 메서드
+      $.ajax({
+                url: 'http://kosmo.iptime.org/api/global?time=1705542420',
+                method: 'GET',
+                //data: { ?? },
+                dataType: 'json',
+                success: function (data) {
+                    // Iterate over the data and add markers to the map
+                    $.each(data, function (index, item) {
+                        var marker = new google.maps.Marker({
+                            position: { lat: item.latitude, lng: item.longitude },
+                            map: map,
+                            title: item.city_name
+                        });
+                    //마커에 클릭 이벤트 핸들러 요청
+                    addMarkerClickEvent(marker, item.city_name);    
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+      
+      // 현재 시각 업데이트를 위한 setInterval 설정
+      setInterval(timeNow, 1000);      
 
-      // 구글 주요지점 마커찍는 부분 예시
-      // function loadMarkersFromDB() {
-      //   $.getJSON('컨트롤러 엔드포인트', function (cities) {
-      //       $.each(cities, function (index, city) {
-      //           var marker = new google.maps.Marker({
-      //               position: {lat: parseFloat(city.latitude), lng: parseFloat(city.longitude)},
-      //               map: map,
-      //               title: city.cityName
-      //           });
-      //       });
-      //   });
-      // }   
+      console.log('Map initialized'); // 맵 초기화 확인용 로그
+    }
 
-      // InfoWindow 내용
-      var infoWindowContent = 
-        '<div class="wContainer">' +
-        '<div class="city">Seoul</div>' +
-        '<div class="c_temp">20°C</div>' +
-        '<img src="https://github.com/mogri89/weatherapp/blob/main/images/clouds.png?raw=true" class="weather-icon">' +
-        '<div class="lh_temp"><span class="ltemp">20°C</span>' +
-        ' / <span class="htemp">30°C</span></div>' +
-        '<p><img src="images/humidity.png"> : <span class="humidity">55%</span> / ' +
-        '<img src ="images/wind.png"> : <span class="windspeed">1 km/h</span></p></div>';
+    // 마커 클릭 이벤트 및 인포윈도우 생성 함수
+    function addMarkerClickEvent(marker, cityName) {
+      // API에서 데이터 가져오기
+      $.ajax({
+        url: 'http://kosmo.iptime.org/api/local',
+        type: 'POST',
+        data: {
+          name: cityName,
+          time: '1705542420'
+        },
+        success: function (jsonData) {
+          console.log('AJAX success:', jsonData); // AJAX 요청 성공 확인용 로그
 
-      // InfoWindow 생성
-      var infoWindow = new google.maps.InfoWindow({
-        content: infoWindowContent
-      });
+          // 인포윈도우 생성하고 내용 설정
+          var infowindow = new google.maps.InfoWindow({
+            content: createInfoWindowContent(jsonData)
+          });
 
-      // 마커 클릭 이벤트 리스너 추가
-      marker.addListener('click', function () {
-        infoWindow.open(map, marker);
-      });
-    
-      //상단 아이콘 클릭시 페이지 새로고침
-      document.addEventListener('DOMContentLoaded', function () {
-        const navbarToggler = document.querySelector('.navbar-toggler');
-        const navbarCollapse = document.querySelector('.navbar-collapse');
-
-        navbarToggler.addEventListener('click', function () {
-          if (navbarCollapse.classList.contains('show')) {
-            navbarCollapse.classList.remove('show');
-          } else {
-            navbarCollapse.classList.add('show');
-          }
-        });
-      });
-
-      // 모바일용 아이콘 새로고침
-      document.addEventListener('DOMContentLoaded', function () {
-        const refreshIcon = document.getElementById('refresh');
-
-        refreshIcon.addEventListener('click', function () {
-          location.reload(true); 
-        });
-      });
-
-      document.addEventListener('DOMContentLoaded', function () {
-      const avatarLink = document.getElementById('sidebarAvatar');
-
-      avatarLink.addEventListener('click', function (event) {
-        event.preventDefault(); 
-        location.reload(true); 
-        });
+          // 마커에 인포윈도우 연결
+          marker.addListener('click', function () {
+            infowindow.open(map, marker);
+            console.log('Infowindow opened'); // 인포윈도우 열림 확인용 로그
+          });
+        },
+        error: function (error) {
+          console.error('API 요청 중 오류 발생:', error);
+        }
       });
     }
+    
+    // replaceNullWithZero 함수 정의
+    function nullToZero(value) {
+      return value === null ? 0 : value;
+    }
+
+    // 인포윈도우 내용 생성 함수
+    function createInfoWindowContent(data) {
+      const convertTime = (timestamp) => {
+        const date = new Date(timestamp * 1000);
+        return date.toLocaleString();
+      };
+
+      // 날씨 유형에 따른 이미지 URL 설정
+      let weatherImageURL;
+      switch (data.w_title.toLowerCase()) {
+        case 'clear':
+          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/clear.png?raw=true';
+          break;
+        case 'clouds':
+          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/clouds.png?raw=true';
+          break;
+        case 'drizzle':
+          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/drizzle.png?raw=true';
+          break;
+        case 'mist':
+          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/mist.png?raw=true';
+          break;
+        case 'rain':
+          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/rain.png?raw=true';
+          break;
+        case 'snow':
+          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/snow.png?raw=true';
+          break;
+        default:
+          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/clear.png?raw=true';
+      }
+
+      // <p>데이터: ${convertTime(data.time_update)}</p>  
+      
+      // null값이 들어갈만한 데이터의 속성 값에 대해 null을 0으로 대체
+      const pressure = nullToZero(data.pressure);
+      const humidity = nullToZero(data.humidity);
+      const wind_speed = nullToZero(data.wind_speed);
+      const wind_deg = nullToZero(data.wind_deg);
+      const rain_1h = nullToZero(data.rain_1h);
+      const snow_1h = nullToZero(data.snow_1h);
+      const cloud = nullToZero(data.cloud); 
+
+      return `
+        <div class="wContainer">
+          <h2>${data.city_name}</h2>
+          <p>${data.country_name}</p>
+          <img src="${weatherImageURL}" width="120" height="120">
+          <p>${data.w_description}</p>
+          <p class="temp"><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/tempneww.png?raw=true" width="60" height="60"> ${Math.round(data.temp_now)}&deg;C</p>
+          <p>체감온도: ${Math.round(data.temp_feels)}&deg;C</p>
+          <p>최고/최저 온도: ${Math.round(data.temp_max)}&deg;C / ${Math.round(data.temp_min)}&deg;C</p>
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/pressure.png?raw=true"> ${pressure}hpa</p>
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/humidityreal.png?raw=true"> ${humidity}%</p>
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/windnew.png?raw=true"> ${wind_speed} m/s</p>
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/airport.png?raw=true"> ${wind_deg}</p>
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/precipitation.png?raw=true"> ${rain_1h} mm</p>
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/snowflower.png?raw=true"> ${snow_1h} mm</p>  
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/cloudicon.png?raw=true"> ${cloud} %</p>
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/sunrisereal.png?raw=true"> ${convertTime(data.sunrise)}</p>
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/sunset.png?raw=true"> ${convertTime(data.sunset)}</p>
+          <p>현재시각: <span id="currentTime"></span></p>
+        </div>
+      `;
+    }
+
+    // 현재 시각 업데이트 함수
+    function timeNow() {
+      const currentTimeMethod = document.getElementById('currentTime');
+      if (currentTimeMethod) {
+        const currentTime = new Date();
+        currentTimeMethod.innerText = currentTime.toLocaleString();
+      }
+    }
+    
+    //햄버거 버튼 활성화
+    document.addEventListener('DOMContentLoaded', function () {
+      const navbarToggler = document.querySelector('.navbar-toggler');
+      const navbarCollapse = document.querySelector('.navbar-collapse');
+
+      navbarToggler.addEventListener('click', function () {
+        if (navbarCollapse.classList.contains('show')) {
+          navbarCollapse.classList.remove('show');
+        } else {
+          navbarCollapse.classList.add('show');
+        }
+      });
+    });
+     
+  
+    // 상단 구름 아이콘 새로고침(창모드 두종류 모두)
+    document.addEventListener('DOMContentLoaded', function () {
+      const refreshIcon = document.getElementById('refresh');
+
+      refreshIcon.addEventListener('click', function () {
+        event.preventDefault();
+        location.reload(true); 
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const avatarLink = document.getElementById('sidebarAvatar');
+
+    avatarLink.addEventListener('click', function (event) {
+      event.preventDefault();
+      location.reload(true); 
+      });
+    });
+    
+    
 
 
 
