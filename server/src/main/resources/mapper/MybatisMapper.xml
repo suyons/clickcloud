@@ -14,7 +14,7 @@
         FROM weather
         JOIN cities USING (city_id)
         JOIN countries USING (country_id)
-        WHERE time_update BETWEEN #{time_update} - 3600 AND  #{time_update}
+        WHERE time_update BETWEEN #{currentTime} - 3600 AND  #{currentTime} 
     </select>
 
     <!-- 모든 cityId 가져오기 / 필요-->

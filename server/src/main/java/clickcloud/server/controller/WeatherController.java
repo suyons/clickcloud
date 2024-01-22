@@ -1,5 +1,6 @@
 package clickcloud.server.controller;
 
+import java.sql.Time;
 import java.time.Instant;
 import java.util.List;
 
@@ -8,8 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import clickcloud.server.dto.BriefWeather;
 import clickcloud.server.mybatis.MybatisMapper;
 import clickcloud.server.service.WeatherApiService;
@@ -32,14 +33,13 @@ public class WeatherController {
 
     //GET - 전체 날씨 조회 api / 주요 100개 도시 (기존에 저장된 테이블에서)
     @GetMapping(value = "/getAllWeather", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<BriefWeather> getAllWeather(int timeUpdate) {
-        int currentTime = (int) Instant.now().getEpochSecond();
-        if(mybatisMapper.getAll(timeUpdate) == null){ //날씨 데이터 아무것도 없으면 최초 업데이트한 후 정보 조회
+    public List<BriefWeather> getAllWeather() {
+        int currentTime = (int) Instant.now().getEpochSecond(); //현재 시간 (초단위) 가져오기
+        if(mybatisMapper.getAll(currentTime) == null){ //데이터 dt가 현재 시간보다 한시간 전에 저장된 
             weatherService.firstUpdateWeather();
-            return mybatisMapper.getAll(currentTime);
         }
         // DB에 이미 정보 있으면 가장 최신 정보(time_update사용) 조회
-        return mybatisMapper.getAll(timeUpdate);
+        return mybatisMapper.getAll(currentTime);
     }
 
     //POST - 특정도시 세부 날씨 조회 api(검색) - 기존 저장된 데이터 + 오픈웨더api 데이터 중에서 찾는다. => 근데 GET도 잘됨

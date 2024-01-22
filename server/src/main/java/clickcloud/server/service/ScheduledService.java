@@ -26,7 +26,7 @@ public class ScheduledService {
     // 매 시간 2분마다 20개 요청
     @Scheduled(cron = "0 2 * * * *") //
     public void updateWeatherHourly2() {
-         System.out.println("[Debug] Part 1 updated at "
+         System.out.println("[Debug] Part 2 updated at "
          + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
          
         weatherService.updateAllWeather(20);  //20~39
@@ -35,7 +35,7 @@ public class ScheduledService {
     // 매 시간 3분마다 20개 요청
     @Scheduled(cron = "0 3 * * * *") //
     public void updateWeatherHourly3() {
-         System.out.println("[Debug] Part 1 updated at "
+         System.out.println("[Debug] Part 3 updated at "
          + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
          
         weatherService.updateAllWeather(40); //40 ~ 59
@@ -44,7 +44,7 @@ public class ScheduledService {
     // 매 시간 3분마다 20개 요청
     @Scheduled(cron = "0 4 * * * *") //
     public void updateWeatherHourly4() {
-         System.out.println("[Debug] Part 1 updated at "
+         System.out.println("[Debug] Part 4 updated at "
          + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
          
         weatherService.updateAllWeather(60); //60 ~ 79
@@ -53,7 +53,7 @@ public class ScheduledService {
     // 매 시간 4분마다 20개 요청
     @Scheduled(cron = "0 5 * * * *") //
     public void updateWeatherHourly5() {
-         System.out.println("[Debug] Part 1 updated at "
+         System.out.println("[Debug] Part 5 updated at "
          + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
          
         weatherService.updateAllWeather(80); //80 ~ 99
