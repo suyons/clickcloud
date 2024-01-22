@@ -35,22 +35,16 @@ public class WeatherController {
         return mybatisMapper.getAll();
     }
 
-    //POST - 세부 날씨 조회 api(검색) - 기존 저장된 데이터 + 오픈웨더api 데이터 중에서 찾는다. 
-    @GetMapping(value = "/searchName/{city_name}", produces = MediaType.APPLICATION_JSON_VALUE)
+    //POST - 세부 날씨 조회 api(검색) - 기존 저장된 데이터 + 오픈웨더api 데이터 중에서 찾는다. => 근데 GET도 잘됨
+    @PostMapping(value = "/searchName/{city_name}", produces = MediaType.APPLICATION_JSON_VALUE)
     public DetailedWeather getDataByName(@PathVariable("city_name") String city_name) {
 
-        int city_id = mybatisMapper.getCityId(city_name); //이름만으로 데이터를 검색하기에는 한계가 있어 id로 검색
-        // 만약 기존 DB에 데이터가 없다면 api로 새로운 데이터 DB에 저장하고 => return문 :  데이터 가져오기
-        if(mybatisMapper.searchName(city_id) == null){ //★
+        // 만약 기존 DB에 데이터가 없다면 api로 새로운 데이터 DB에 저장!
+        if(mybatisMapper.searchName(city_name) == null){ 
             weatherService.getSearchedData(city_name); //저장
-        }
-        // 만약 기존 DB에 데이터가 있다면 그냥 바로 날씨 세부 정보 데이터 가져오기
-        DetailedWeather results = mybatisMapper.searchName(city_id);
-        if(results == null){
-            System.out.println("데이터 결과 없다 ㅡㅡ");
-        }
-        
-        return results;
-        
+        } 
+        DetailedWeather results = mybatisMapper.searchName(city_name); //데이터 가져오기
+
+        return results; 
     }
 }
