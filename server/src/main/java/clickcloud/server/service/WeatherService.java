@@ -28,9 +28,9 @@ public class WeatherService {
         //모든 도시 목록 가져오기
         List<Integer> cityIds = mybatisMapper.getAllCityId();
 
-        for(int city_id : cityIds) {
+        for(int i = 0; i < 20; i ++) { //20개씩..만 저장 int city_id : cityIds)
             //city_id로 날씨 정보 가져오기
-            String weatherData = weatherApiService.getWeatherToId(city_id);
+            String weatherData = weatherApiService.getWeatherToId(cityIds.get(i));
             //날씨 테이블에 저장하기
             saveWeatherDB(weatherData);
         }
@@ -52,7 +52,9 @@ public class WeatherService {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(weatherData); //readTree() : JSON 데이터를 나타내는 문자열을 파싱하여 JsonNode 객체로 변환
 
-            int weather_id = jsonNode.path("sys").path("id").asInt();
+            //weather_id는 기존 테이블의 id 가져오기
+            Integer weather_id = mybatisMapper.getWeatherId();
+
             int city_id = jsonNode.path("id").asInt();
             String w_title = jsonNode.path("weather").get(0).path("main").asText();
             String w_description = jsonNode.path("weather").get(0).path("description").asText();
@@ -69,7 +71,7 @@ public class WeatherService {
             int cloud = jsonNode.path("clouds").path("all").asInt();
             int sunrise = jsonNode.path("sys").path("sunrise").asInt();
             int sunset = jsonNode.path("sys").path("sunset").asInt();
-            int time_update = jsonNode.path("dt").asInt();
+            int time_update = jsonNode.path("dt").asInt() + 1;
             
             //데이터 베이스에 저장 - Weather 테이블
             weatherDB(weather_id, city_id, w_title, w_description, temp_now, temp_feels, temp_min, temp_max, pressure,
@@ -84,22 +86,20 @@ public class WeatherService {
 
     //mybatis로 db저장- weather 테이블
     private void weatherDB(
-        int weather_id, int city_id, String w_title, String w_description, double temp_now, double temp_feels, double temp_min,
+        Integer weather_id, int city_id, String w_title, String w_description, double temp_now, double temp_feels, double temp_min,
         double temp_max, int pressure, int humidity, double wind_speed, int wind_deg, Double rain_1h, Double snow_1h, int cloud,
         int sunrise, int sunset, int time_update){
 
         //MyBatis 사용해서 DB에 저장
         Weather weather = new Weather();
 
-         //sys의 id가 없는 경우가 있다 => weather_id가 중복됨 ㅠ
-         if(weather_id != 0){
-            weather.setWeather_id(weather_id);
+         //기존 테이블에 weather_id null이면 1반환 null아니면 +1 반환
+         if(weather_id == null){
+            weather.setWeather_id(1);
          } else {
-            Random random = new Random();
-            int randomId = random.nextInt(1000000); // 적절한 범위로 조절
-            int randomWeatherId = randomId;
-            weather.setWeather_id(randomWeatherId);
-            System.out.println("weather_id가 0이므로 랜덤 값을 부여했습니다");
+            weather_id += 1;
+            weather.setWeather_id(weather_id);
+            System.out.println("weather_id가 0이므로 1을 부여했습니다");
          }
         
         weather.setCity_id(city_id);

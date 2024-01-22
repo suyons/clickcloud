@@ -28,4 +28,7 @@ public interface MybatisMapper {
 
     //모든 city_name 가져오기
     List<String> getAllCityName();
+
+    //weather 테이블의 weather_id(sys의 id)가져오기
+    Integer getWeatherId();
 }

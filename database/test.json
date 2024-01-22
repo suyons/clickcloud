@@ -1,0 +1,44 @@
+{
+  "coord": {
+    "lon": 125.7543,
+    "lat": 39.0339
+  },
+  "weather": [
+    {
+      "id": 804,
+      "main": "Clouds",
+      "description": "overcast clouds",
+      "icon": "04d"
+    }
+  ],
+  "base": "stations",
+  "main": {
+    "temp": -10.54,
+    "feels_like": -17.54,
+    "temp_min": -10.54,
+    "temp_max": -10.54,
+    "pressure": 1029,
+    "humidity": 53,
+    "sea_level": 1029,
+    "grnd_level": 1023
+  },
+  "visibility": 10000,
+  "wind": {
+    "speed": 7.53,
+    "deg": 324,
+    "gust": 9.79
+  },
+  "clouds": {
+    "all": 86
+  },
+  "dt": 1705902075,
+  "sys": {
+    "country": "KP",
+    "sunrise": 1705877493,
+    "sunset": 1705913079
+  },
+  "timezone": 32400,
+  "id": 1871859,
+  "name": "Pyongyang",
+  "cod": 200
+}

@@ -20,6 +20,12 @@
         FROM cities
     </select>
 
+    <!-- weather 테이블의 weather_id(sys의 id)가져오기 -->
+    <select id="getWeatherId">
+        SELECT MAX(weather_id)
+        FROM weather
+    </select>
+    
     <!-- 받아온 날씨 데이터를 DB에 저장 -->
    <insert id="insertWeather" parameterType="clickcloud.server.dto.Weather">
         INSERT INTO weather (
@@ -36,6 +42,7 @@
         )
     </insert>
 
+    <!-- 받아온 도시 데이터를 DB에 저장 -->
     <insert id="insertCities" parameterType="clickcloud.server.dto.Cities">
         INSERT INTO cities (
             city_id, country_id, city_name, latitude, longitude, timezone
