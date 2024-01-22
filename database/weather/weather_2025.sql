@@ -1,6 +1,3 @@
--- event scheduler ON (ROOT 계정으로 실행)
-SET GLOBAL event_scheduler = ON;
-
 -- 2025-01-01 00:00:00에 실행되는 이벤트 생성
 
 CREATE EVENT create_weather_table_2025
