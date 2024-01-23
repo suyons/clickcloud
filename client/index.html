@@ -260,8 +260,8 @@
         data: { name: cityNameInput, time: timeInput },
         dataType: "json",
         success: function (data) {
-          if (data.coord) {
-            var latLng = { lat: data.coord.lat, lng: data.coord.lon };
+          if (data) {
+            var latLng = { lat: data.latitude, lng: data.longitude };
 
             // 마커생성
             var marker2 = new google.maps.Marker({

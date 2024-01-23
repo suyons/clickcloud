@@ -47,6 +47,8 @@ public class WeatherService {
 
 			String city_name = jNode.path("name").asText();
 			String country_name = jNode.path("sys").path("country").asText();
+            double latitude = jNode.path("coord").path("lat").asDouble();
+            double longitude = jNode.path("coord").path("lon").asDouble();
 			String w_title = jNode.path("weather").get(0).path("main").asText();
 			String w_description = jNode.path("weather").get(0).path("description").asText();
 			double temp_now = jNode.path("main").path("temp").asDouble();
@@ -70,6 +72,8 @@ public class WeatherService {
 
 			jsonNode.put("city_name", city_name);
 			jsonNode.put("country_name", country_name);
+            jsonNode.put("latitude", latitude);
+            jsonNode.put("longitude", longitude);
 			jsonNode.put("w_title", w_title);
 			jsonNode.put("w_description", w_description);
 			jsonNode.put("temp_now", temp_now);
