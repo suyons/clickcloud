@@ -66,13 +66,10 @@
           <div class="d-flex flex-column p-2">
             <input class="form-control me-2" action="" type="text" id="cityNameInput" placeholder="City Name"
               aria-label="Search">
-            <button class="btn btn-outline-success mt-3 p-2" type="button" id="searchButton"
-              onclick="showWeather()">search</button>
-          </div>
-          <div class="d-flex flex-column p-2">
+            <!-- <button class="btn btn-outline-success mt-3 p-2" type="button" id="searchButton" onclick="showWeather()">search</button> -->
             <input class="form-control me-2" action="" type="datetime-local" id="timeInput" placeholder="time"
               aria-label="Search" min="2024-01-22T09:00">
-            <button class="btn btn-outline-success mt-3 p-2" type="button" id="searchButton2">search</button>
+            <button class="btn btn-outline-success mt-3 p-2" type="button" id="searchButton">search</button>
           </div>
         </div>
       </div>
@@ -254,16 +251,20 @@
 
     // 검색창 메서드
     function showWeather() {
+      event.preventDefault();
       var cityNameInput = document.getElementById('cityNameInput').value;
+      var timeInput = document.getElementById('timeInput').value;
+
       if (!cityNameInput) {
         alert('검색하고자 하는 도시 이름을 입력해주세요.');
         return;
       }
 
-      // openweathermap api 호출
       $.ajax({
-        url: `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${cityNameInput}&appid=38441e8dedceb6c9e64960261dea0d91`,
-        method: 'GET',
+        url: '/api/local',
+        type: 'POST',
+        data: { name: cityNameInput, time: timeInput },
+        dataType: "json",
         success: function (data) {
           if (data.coord) {
             var latLng = { lat: data.coord.lat, lng: data.coord.lon };
@@ -298,6 +299,47 @@
           console.error('Error fetching weather data:', error);
         }
       });
+
+      // openweathermap api 호출
+      /*
+      $.ajax({
+        url: `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${cityNameInput}&appid=${weather_apikey}`,
+        method: 'GET',
+        success: function (data) {
+          if (data.coord) {
+            var latLng = { lat: data.coord.lat, lng: data.coord.lon };
+
+            // 마커생성
+            var marker2 = new google.maps.Marker({
+              position: latLng,
+              map: map,
+              title: cityNameInput
+            });
+
+            // 마커 클릭 이벤트핸들러
+            marker2.addListener('click', function () {
+              showInfoWindow(marker2, data);
+            });
+
+            // 마커 위치로 화면 이동
+            map.setCenter(latLng);
+            map.setZoom(8);
+
+            // 마커를 배열에 추가
+            markers2.push({
+              marker2: marker2,
+              data: data,
+              infowindow2: new google.maps.InfoWindow() 
+            });  
+          } else {
+            alert('올바른 도시이름을 입력해주세요.');
+          }
+        },
+        error: function (error) {
+          console.error('Error fetching weather data:', error);
+        }
+      });
+      */
     }
 
     //해당 마커 위치에서 infowindow2 객체 부여하고 오픈
