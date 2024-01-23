@@ -49,11 +49,11 @@
 ## 03 구성도
 **Package Diagram**
 
-![Package Diagram](docs/package_diagram.svg)
+![Package Diagram](docs/diagram/package_diagram.svg)
 
 **ER Diagram**
 
-![ER Diagram](docs/database_erd.svg)
+![ER Diagram](docs/diagram/database_erd.svg)
 
 ## 04 구현 기능
 
