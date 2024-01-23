@@ -257,6 +257,7 @@
       event.preventDefault();
       var cityNameInput = document.getElementById('cityNameInput').value;
       var timeInput = document.getElementById('timeInput').value;
+      const timestamp = new Date(timeInput).getTime() / 1000;
 
       if (!cityNameInput) {
         alert('검색하고자 하는 도시 이름을 입력해주세요.');
@@ -266,7 +267,7 @@
       $.ajax({
         url: '/api/local',
         type: 'POST',
-        data: { name: cityNameInput, time: timeInput },
+        data: { name: cityNameInput, time: timestamp },
         dataType: "json",
         success: function (data) {
           if (data) {
