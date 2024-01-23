@@ -271,10 +271,15 @@
         success: function (data) {
           if (data) {
             var latLng = { lat: data.latitude, lng: data.longitude };
-
+            
             // 마커생성
+            const markerIcon = {
+              url: `https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/${w_title}.png`,
+              scaledSize: new google.maps.Size(40, 40),
+            };
             var marker2 = new google.maps.Marker({
               position: latLng,
+              icon: markerIcon,
               map: map,
               title: cityNameInput
             });
@@ -283,7 +288,7 @@
             marker2.addListener('click', function () {
               showInfoWindow(marker2, data);
             });
-
+            
             // 마커 위치로 화면 이동
             map.setCenter(latLng);
             map.setZoom(8);
