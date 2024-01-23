@@ -66,10 +66,9 @@
           <div class="d-flex flex-column p-2">
             <input class="form-control me-2" action="" type="text" id="cityNameInput" placeholder="City Name"
               aria-label="Search">
-            <!-- <button class="btn btn-outline-success mt-3 p-2" type="button" id="searchButton" onclick="showWeather()">search</button> -->
             <input class="form-control me-2" action="" type="datetime-local" id="timeInput" placeholder="time"
               aria-label="Search" min="2024-01-22T09:00">
-            <button class="btn btn-outline-success mt-3 p-2" type="button" id="searchButton">search</button>
+            <button class="btn btn-outline-success mt-3 p-2" type="button" id="searchButton" onclick="showWeather()">Search</button>
           </div>
         </div>
       </div>
@@ -114,11 +113,8 @@
 
       // DB에서 좌표를 가져와서 마커 찍어주는 메서드
       $.ajax({
-        url: 'http://kosmo.iptime.org/api/global',
+        url: '/api/global',
         method: 'POST',
-        //data: { 
-        //  time: ?? 
-        //},
         dataType: 'json',
         success: function (data) {
           // 맵에 DB상의 좌표로 마커 마커들 찍어줌
@@ -136,18 +132,16 @@
           console.error('api 오류', error);
         }
       });
-
     }
 
     // 마커 클릭 이벤트 및 인포윈도우 생성 함수
     function addMarkerClickEvent(marker, cityName) {
       // API에서 데이터 가져오기
       $.ajax({
-        url: 'http://kosmo.iptime.org/api/local',
+        url: '/api/local',
         type: 'POST',
         data: {
           name: cityName,
-          //time: '1705542420'
         },
         success: function (jsonData) {
           // AJAX 요청 성공 확인 로그

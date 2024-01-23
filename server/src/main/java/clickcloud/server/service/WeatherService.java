@@ -33,12 +33,12 @@ public class WeatherService {
 			// city_id로 날씨 정보 가져오기
 			String weatherData = weatherApiService.getWeatherById(cityIds.get(i));
 			// 날씨 테이블에 저장하기
-			saveWeatherDB(weatherData);
+			parse_before_insert(weatherData);
 		}
 	}
 
 	// 특정 도시의 날씨 데이터에서 필요한 데이터만 JSON형식으로 불러오기
-	public JsonNode parseJson(String weatherData) {
+	public String parseJson(String weatherData) {
 		try {
 			// JSON 데이터 파싱
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -63,7 +63,7 @@ public class WeatherService {
 			int sunrise = jNode.path("sys").path("sunrise").asInt();
 			int sunset = jNode.path("sys").path("sunset").asInt();
 			int time_update = jNode.path("dt").asInt();
-			String timezone = jNode.path("dt").asText();
+			int timezone = jNode.path("timezone").asInt();
 
 			JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
 			ObjectNode jsonNode = nodeFactory.objectNode();
@@ -89,8 +89,9 @@ public class WeatherService {
 			jsonNode.put("timezone", timezone);
 
 			// JsonNode를 문자열로 변환
-			// String jsonString = objectMapper.writeValueAsString(jsonNode);
-			return jsonNode;
+			String jsonString = objectMapper.writeValueAsString(jsonNode);
+            return jsonString;
+			// return jsonNode;
 		} catch (JsonProcessingException e) {
 			// 예외 처리: JSON 데이터 파싱 중에 오류가 발생한 경우
 			e.printStackTrace();
@@ -99,7 +100,7 @@ public class WeatherService {
 	}
 
 	// 받아온 날씨 데이터 DB에 저장
-	public void saveWeatherDB(String weatherData) {
+	public void parse_before_insert(String weatherData) {
 		try {
 			// JSON 데이터 파싱
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -107,7 +108,7 @@ public class WeatherService {
 																	// 객체로 변환
 
 			// weather_id는 기존 테이블의 id 가져오기
-			Integer weather_id = mybatisMapper.getWeatherId();
+			// Integer weather_id = mybatisMapper.getWeatherId();
 
 			int city_id = jsonNode.path("id").asInt();
 			String w_title = jsonNode.path("weather").get(0).path("main").asText();
@@ -128,7 +129,7 @@ public class WeatherService {
 			int time_update = jsonNode.path("dt").asInt();
 
 			// 데이터 베이스에 저장 - Weather 테이블
-			weatherDB(weather_id, city_id, w_title, w_description, temp_now, temp_feels, temp_min, temp_max, pressure,
+			insert_weather(null, city_id, w_title, w_description, temp_now, temp_feels, temp_min, temp_max, pressure,
 					humidity, wind_speed, wind_deg, rain_1h, snow_1h, cloud, sunrise, sunset, time_update);
 
 		} catch (JsonProcessingException e) {
@@ -139,7 +140,7 @@ public class WeatherService {
 	}
 
 	// api로 받아온 weather 데이터 DB에 저장
-	private void weatherDB(Integer weather_id, int city_id, String w_title, String w_description, double temp_now,
+	private void insert_weather(Integer weather_id, int city_id, String w_title, String w_description, double temp_now,
 			double temp_feels, double temp_min, double temp_max, int pressure, int humidity, double wind_speed,
 			int wind_deg, Double rain_1h, Double snow_1h, int cloud, int sunrise, int sunset, int time_update) {
 
@@ -147,14 +148,13 @@ public class WeatherService {
 		Weather weather = new Weather();
 
 		// 기존 테이블에 weather_id null이면 1반환 null아니면 +1 반환
-		if (weather_id == null) {
-			weather.setWeather_id(1);
-			System.out.println("weather_id가 0이므로 1을 부여했습니다");
-		} else {
-			weather_id += 1;
-			weather.setWeather_id(weather_id);
-		}
-
+		// if (weather_id == null) {
+		// 	weather.setWeather_id(1);
+		// 	System.out.println("weather_id가 0이므로 1을 부여했습니다");
+		// } else {
+		// 	weather_id += 1;
+		// 	weather.setWeather_id(weather_id);
+		// }
 		weather.setCity_id(city_id);
 		weather.setW_title(w_title);
 		weather.setW_description(w_description);
@@ -174,7 +174,5 @@ public class WeatherService {
 		weather.setTime_update(time_update);
 
 		mybatisMapper.insertWeather(weather);
-
 	}
-
 }

@@ -42,7 +42,7 @@ public class WeatherApiService {
             String response = restTemplate.getForObject(apiUrl, String.class);
 
             // JSON 데이터 출력(테스트용)
-            System.out.println(response);
+            // System.out.println(response);
 
             return response;
         } catch (RestClientException e) {
