@@ -64,11 +64,13 @@
         <div class="collapse navbar-collapse" id="sidebarCollapse">
           <!-- 검색버튼 -->
           <div class="d-flex flex-column p-2">
-            <input class="form-control me-2" action="" type="text" id="cityNameInput" placeholder="City Name"
-              aria-label="Search">
-            <input class="form-control me-2" action="" type="datetime-local" id="timeInput" placeholder="time"
-              aria-label="Search" min="2024-01-22T09:00">
-            <button class="btn btn-outline-success mt-3 p-2" type="button" id="searchButton" onclick="showWeather()">Search</button>
+            <form>
+              <input class="form-control me-2" action="" type="text" id="cityNameInput" placeholder="City Name"
+                aria-label="Search">
+              <input class="form-control me-2" action="" type="datetime-local" id="timeInput" placeholder="time"
+                aria-label="Search" value="2024-01-23T12:00" min="2024-01-22T09:00" />
+              <button class="btn btn-outline-success mt-3 p-2" type="submit" id="searchButton">Search</button>
+            </form>
           </div>
         </div>
       </div>
@@ -143,6 +145,7 @@
     // 마커 클릭 이벤트 및 인포윈도우 생성 함수
     function addMarkerClickEvent(marker, cityName) {
       // API에서 데이터 가져오기
+
       $.ajax({
         url: '/api/local',
         type: 'POST',
@@ -163,12 +166,16 @@
             infowindow.open(map, marker);
             console.log('Infowindow opened'); // 인포윈도우 열림 확인용 로그
           });
-        },
-        error: function (error) {
-          console.error('API 요청 중 오류 발생:', error);
         }
       });
     }
+    /* ,
+    error: function (error) {
+      console.error('API 요청 중 오류 발생:', error);
+    }
+      });
+    }
+    */
 
     // 데이터로 받아오는 null값을 0으로 치환하는 함수
     function nullToZero(value) {
@@ -253,27 +260,30 @@
     }
 
     // 검색창 메서드
+    $('form').submit(function (event) {
+      showWeather();
+    });
     function showWeather() {
       event.preventDefault();
       var cityNameInput = document.getElementById('cityNameInput').value;
       var timeInput = document.getElementById('timeInput').value;
       const timestamp = new Date(timeInput).getTime() / 1000;
-      const timestamp_nan = isNaN(timestamp) ? null : timestamp;
 
       if (!cityNameInput) {
-        alert('검색하고자 하는 도시 이름을 입력해주세요.');
+        alert('도시 이름을 입력해주세요.');
         return;
       }
 
       $.ajax({
         url: '/api/local',
         type: 'POST',
-        data: { name: cityNameInput, time: timestamp_nan },
-        dataType: "json",
+        data: { name: cityNameInput, time: timestamp },
+        dataType: 'json',
         success: function (data) {
           if (data) {
             var latLng = { lat: data.latitude, lng: data.longitude };
-            
+            var w_title = data.w_title.toLowerCase();
+
             // 마커 위치로 화면 이동
             map.setCenter(latLng);
             map.setZoom(8);
@@ -283,6 +293,7 @@
               url: `https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/${w_title}.png`,
               scaledSize: new google.maps.Size(40, 40),
             };
+
             var marker2 = new google.maps.Marker({
               position: latLng,
               icon: markerIcon,
@@ -291,10 +302,13 @@
             });
 
             // 마커 클릭 이벤트핸들러
+            /*
             marker2.addListener('click', function () {
               showInfoWindow(marker2, data);
             });
-            
+            */
+            addMarkerClickEvent(marker2, cityNameInput);
+
             // 마커를 배열에 추가
             markers2.push({
               marker2: marker2,
@@ -318,23 +332,23 @@
         success: function (data) {
           if (data.coord) {
             var latLng = { lat: data.coord.lat, lng: data.coord.lon };
-
+ 
             // 마커생성
             var marker2 = new google.maps.Marker({
               position: latLng,
               map: map,
               title: cityNameInput
             });
-
+ 
             // 마커 클릭 이벤트핸들러
             marker2.addListener('click', function () {
               showInfoWindow(marker2, data);
             });
-
+ 
             // 마커 위치로 화면 이동
             map.setCenter(latLng);
             map.setZoom(8);
-
+ 
             // 마커를 배열에 추가
             markers2.push({
               marker2: marker2,
@@ -418,7 +432,7 @@
       return `
         <div class="wContainer2">
           <h2>${data.name}</h2>
-          <p>${countryCodeToName(data.sys.country)}</p>
+          <p>${ata.country_name}</p>
           <img src="${weatherImageURL2}" width="120" height="120">
           <p>${data.weather[0].description}</p>
           <p class="temp"><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/temp-icon.png" width="60" height="60"> ${Math.round(data.main.temp)}&deg;C</p>
@@ -475,7 +489,9 @@
       });
     });
 
+
     //국가 코드를 받아 국가명으로 변환하는 함수
+    /*
     function countryCodeToName(countryCode) {
       var countryMapping = {
         'AD': 'Andorra',
@@ -738,9 +754,8 @@
 
       return countryMapping[countryCode] || countryCode;
     }
-
+    */
   </script>
-
 </body>
 
 </html>

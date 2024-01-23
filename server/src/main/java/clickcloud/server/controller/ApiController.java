@@ -40,6 +40,7 @@ public class ApiController {
      */
     @PostMapping(value = "/global", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<GlobalWeather> globalWeather(@RequestParam(name = "time", required = false) Long timestamp) {
+        System.out.println("[Debug] POST global / time: " + timestamp);
         List<GlobalWeather> weatherList = mybatisMapper.getAllByTime(timestamp != null ? timestamp : System.currentTimeMillis() / 1000);
         if(weatherList.size() == 0) {
             weatherList = mybatisMapper.getAllLatest();
@@ -58,6 +59,7 @@ public class ApiController {
     @PostMapping(value = "/local", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object localWeather(@RequestParam(name = "name", required = true) String city_name,
             @RequestParam(name = "time", required = false) Long timestamp) {
+        System.out.println("[Debug] POST local / name: " + city_name + ", time: " + timestamp);
         // DB에서 도시명&시간 검색
         LocalWeather localWeather = mybatisMapper.searchName(city_name,
                 timestamp != null ? timestamp : System.currentTimeMillis() / 1000);
