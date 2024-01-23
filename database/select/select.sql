@@ -44,3 +44,11 @@ FROM weather_2024
     JOIN cities USING (city_id)
     JOIN countries USING (country_id)
 WHERE city_name = 'Seoul';
+
+
+SELECT DISTINCT city_name, w_title, latitude, longitude
+FROM weather_2024
+    JOIN cities USING (city_id)
+    JOIN countries USING (country_id)
+ORDER BY time_update DESC
+LIMIT 100;

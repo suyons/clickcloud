@@ -4,17 +4,15 @@ package clickcloud.server.dto;
 import lombok.Data;
 
 @Data
-public class LocalWeather {
-    private String city_name;
-    private String country_name;
-    private double latitude;
-    private double longitude;
+public class Weather {
+    private int weather_id;
+    private int city_id; 
     private String w_title;
     private String w_description;
     private double temp_now;
     private double temp_feels;
     private double temp_min;
-    private double temp_max;
+    private double temp_max; 
     private int pressure;
     private int humidity;
     private double wind_speed;
@@ -25,5 +23,4 @@ public class LocalWeather {
     private int sunrise;
     private int sunset;
     private int time_update;
-    private int timezone;
 }

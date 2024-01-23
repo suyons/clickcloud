@@ -12,30 +12,39 @@ import org.springframework.web.bind.annotation.RestController;
 import clickcloud.server.dto.GlobalWeather;
 import clickcloud.server.dto.LocalWeather;
 import clickcloud.server.mybatis.MybatisMapper;
+import clickcloud.server.service.WeatherApiService;
+import clickcloud.server.service.WeatherService;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class ApiController {
-    // MybatisMapper 인터페이스는 new를 통해 객체화할 수 없으므로 @Autowired를 통한 의존성 주입 불가능
     private final MybatisMapper mybatisMapper;
+    private final WeatherApiService weatherApiService;
+    private final WeatherService weatherService;
 
-    public ApiController(MybatisMapper mybatisMapper) {
+    // @Autowired를 통한 의존성 주입은 불가능하므로 생성자를 통해 의존성 주입
+    public ApiController(MybatisMapper mybatisMapper, WeatherService weatherService,
+            WeatherApiService weatherApiService) {
         this.mybatisMapper = mybatisMapper;
+        this.weatherApiService = weatherApiService;
+        this.weatherService = weatherService;
     }
 
     /**
      * @function globalWeather
      * @param Integer timestamp
-     * @return timestamp가 null이면 현재 시간 기준으로 30분 전부터 30분 후까지의 모든 도시의 날씨 정보를 반환
+     * @return timestamp가 null이면 현재 시간 기준으로 1시간 전까지의 모든 도시의 날씨 정보를 반환
      * @return timestamp가 null이 아니면 timestamp 기준으로 1시간 전까지의 모든 도시의 날씨 정보를 반환
-     * @test GET /api/global?time=1705542420
+     * @test POST /api/global?time=1705542420
      */
     @PostMapping(value = "/global", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<GlobalWeather> globalWeather(@RequestParam(name = "time", required = false) Integer timestamp) {
-        return timestamp == null
-                ? mybatisMapper.getAllByTime(System.currentTimeMillis() / 1000)
-                : mybatisMapper.getAllByTime(timestamp);
+    public List<GlobalWeather> globalWeather(@RequestParam(name = "time", required = false) Long timestamp) {
+        List<GlobalWeather> weatherList = mybatisMapper.getAllByTime(timestamp != null ? timestamp : System.currentTimeMillis() / 1000);
+        if(weatherList.size() == 0) {
+            weatherList = mybatisMapper.getAllLatest();
+        }
+        return weatherList;
     }
 
     /**
@@ -47,10 +56,15 @@ public class ApiController {
      * @test POST /api/local?name=seoul&time=1705542420
      */
     @PostMapping(value = "/local", produces = MediaType.APPLICATION_JSON_VALUE)
-    public LocalWeather localWeather(@RequestParam(name = "name", required = true) String city_name,
-            @RequestParam(name = "time", required = false) Integer timestamp) {
-        return timestamp == null
-                ? mybatisMapper.searchName(city_name, System.currentTimeMillis() / 1000)
-                : mybatisMapper.searchName(city_name, timestamp);
+    public Object localWeather(@RequestParam(name = "name", required = true) String city_name,
+            @RequestParam(name = "time", required = false) Long timestamp) {
+        // DB에서 도시명&시간 검색
+        LocalWeather localWeather = mybatisMapper.searchName(city_name,
+                timestamp != null ? timestamp : System.currentTimeMillis() / 1000);
+        // 검색 결과가 없으면 OpenWeatherMap에서 가져와서 해당 지역의 현재 날씨를 DB에 저장
+        if (localWeather == null)
+            return weatherService.parseJson(weatherApiService.getWeatherByName(city_name));
+        // 검색 결과가 있다면 해당 지역의 지정한 시각 날씨를 반환
+        return localWeather;
     }
 }
