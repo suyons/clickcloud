@@ -3,7 +3,7 @@ SELECT city_name,
     w_title,
     latitude,
     longitude
-FROM weather
+FROM weather_2024
     JOIN cities USING (city_id);
 
 /*
@@ -35,7 +35,7 @@ SELECT
     sunset,
     time_update,
     timezone
-FROM weather
+FROM weather_2024
     JOIN cities USING (city_id)
     JOIN countries USING (country_id)
 WHERE city_name = 'Seoul';

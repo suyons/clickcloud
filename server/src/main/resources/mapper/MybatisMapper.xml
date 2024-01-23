@@ -29,11 +29,13 @@
         SELECT city_name, country_name, w_title, w_description, temp_now, temp_feels, temp_min, temp_max,
                pressure, humidity, wind_speed, wind_deg, rain_1h, snow_1h, cloud, sunrise, sunset, time_update,
                timezone
-        FROM weather
+        FROM weather 
         JOIN cities USING (city_id)
         JOIN countries USING (country_id)
         WHERE city_name LIKE CONCAT('%', #{city_name}, '%') 
-        <!-- 파라미터랑 저장 도시이름 다를 수 있음 예시) 저장된 city_name은 bucheon-si / 파라미터는 bucheon임 -->
+        ORDER BY weather_id DESC
+        LIMIT 1
+        <!-- AND time_update BETWEEN #{currentTime - 3600} AND #{currentTime} -->
     </select>
 
     <!-- 받아온 날씨 데이터를 DB에 저장 -->

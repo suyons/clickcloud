@@ -18,7 +18,7 @@ public interface MybatisMapper {
     List<Integer> getAllCityId();
 
     // 특정 도시 상세 날씨 정보 불러오기
-    DetailedWeather searchName(@Param("city_name") String city_name);
+    DetailedWeather searchName(@Param("city_name") String city_name); //, @Param("currentTime") int currentTime
 
     // 오픈웨더에서 가져온 날씨 정보 Weather table에 저장 
     void insertWeather(Weather weather);
