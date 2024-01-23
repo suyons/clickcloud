@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,7 +31,7 @@ public class ApiController {
      * @return timestamp가 null이 아니면 timestamp 기준으로 1시간 전까지의 모든 도시의 날씨 정보를 반환
      * @test GET /api/global?time=1705542420
      */
-    @GetMapping(value = "/global", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/global", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<GlobalWeather> globalWeather(@RequestParam(name = "time", required = false) Integer timestamp) {
         return timestamp == null
                 ? mybatisMapper.getAllByTime(System.currentTimeMillis() / 1000)
