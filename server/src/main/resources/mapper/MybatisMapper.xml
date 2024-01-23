@@ -11,7 +11,7 @@
      <!-- 1시간 이내 주요도시 100개의 날씨 정보 한번에 불러오기 -->
     <select id="getAll" resultType="clickcloud.server.dto.BriefWeather" parameterType="int">
         SELECT city_name, w_title, latitude, longitude
-        FROM weather
+        FROM weather_2024
         JOIN cities USING (city_id)
         JOIN countries USING (country_id)
         WHERE time_update BETWEEN #{currentTime} - 3600 AND  #{currentTime} 
@@ -29,7 +29,7 @@
         SELECT city_name, country_name, w_title, w_description, temp_now, temp_feels, temp_min, temp_max,
                pressure, humidity, wind_speed, wind_deg, rain_1h, snow_1h, cloud, sunrise, sunset, time_update,
                timezone
-        FROM weather 
+        FROM weather_2024
         JOIN cities USING (city_id)
         JOIN countries USING (country_id)
         WHERE city_name LIKE CONCAT('%', #{city_name}, '%') 
@@ -40,7 +40,7 @@
 
     <!-- 받아온 날씨 데이터를 DB에 저장 -->
    <insert id="insertWeather" parameterType="clickcloud.server.dto.Weather">
-        INSERT INTO weather (
+        INSERT INTO weather_2024 (
             weather_id, city_id, w_title, w_description,
             temp_now, temp_feels, temp_min, temp_max,
             pressure, humidity, wind_speed, wind_deg,
@@ -55,10 +55,10 @@
     </insert>
 
     
-    <!-- weather 테이블의 weather_id가져오기 -->
+    <!-- weather_2024 테이블의 weather_id가져오기 -->
     <select id="getWeatherId">
         SELECT MAX(weather_id)
-        FROM weather
+        FROM weather_2024
     </select>
     
  

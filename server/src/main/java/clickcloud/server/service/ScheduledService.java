@@ -21,7 +21,7 @@ public class ScheduledService {
          + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
          
         weatherService.updateAllWeather(0); //0~19
-        System.out.println("20개 업데이트 완료");
+        System.out.println("Part 1 20개 업데이트 완료");
     }
 
     // 매 시간 2분마다 20개 요청
@@ -31,7 +31,7 @@ public class ScheduledService {
          + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
          
         weatherService.updateAllWeather(20);  //20~39
-        System.out.println("20개 업데이트 완료");
+        System.out.println("Part 2 20개 업데이트 완료");
     }
 
     // 매 시간 3분마다 20개 요청
@@ -41,7 +41,7 @@ public class ScheduledService {
          + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
          
         weatherService.updateAllWeather(40); //40 ~ 59
-        System.out.println("20개 업데이트 완료");
+        System.out.println("Part 3 20개 업데이트 완료");
     }
 
     // 매 시간 3분마다 20개 요청
@@ -51,7 +51,7 @@ public class ScheduledService {
          + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
          
         weatherService.updateAllWeather(60); //60 ~ 79
-        System.out.println("20개 업데이트 완료");
+        System.out.println("Part 4 20개 업데이트 완료");
     }
 
     // 매 시간 4분마다 20개 요청
@@ -61,7 +61,7 @@ public class ScheduledService {
          + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
          
         weatherService.updateAllWeather(80); //80 ~ 99
-        System.out.println("20개 업데이트 완료");
+        System.out.println("Part 5 20개 업데이트 완료");
     }
 
 }

@@ -35,7 +35,7 @@ public class WeatherController {
         int currentTime = (int) Instant.now().getEpochSecond(); //현재 시간 (초단위) 가져오기
         if(mybatisMapper.getWeatherId()== null){ //데이터 dt가 현재 시간보다 한시간 전에 저장된 
             weatherService.firstUpdateWeather();
-        }
+        } 
         // DB에 이미 정보 있으면 가장 최신 정보(time_update사용) 조회
         return mybatisMapper.getAll(currentTime);
     }
