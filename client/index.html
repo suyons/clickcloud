@@ -8,120 +8,67 @@
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.0/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://unpkg.com/@webpixels/css@1.1.93/dist/index.css">
-  <script src="maps_config.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <!-- <script src="maps_config.js"></script> -->
+  <style>
+    h2 {
+      color: white;
+    }
+
+    .wContainer {
+      text-align: center;
+      background: linear-gradient(to left bottom, #81d2f8, #24b8fe);
+      color: white;
+    }
+
+    .temp {
+      font-size: 30px;
+    }
+  </style>
   <title>Clickcloud 날씨 지도</title>
-  <script>
-    let map;
-
-    function initMap() {
-      map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: 20, lng: -160 },
-        zoom: 2,
-      });
-
-      infoWindow = new google.maps.InfoWindow({
-        content: ""
-      });
-
-      // Get the earthquake data (JSONP format)
-      // This feed is a copy from the USGS feed, you can find the originals here:
-      //   http://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
-      const script = document.createElement("script");
-
-      script.setAttribute(
-        "src",
-        "https://storage.googleapis.com/mapsdevsite/json/quakes.geo.json"
-      );
-      document.getElementsByTagName("head")[0].appendChild(script);
-    }
-
-    // Defines the callback function referenced in the jsonp file.
-    function eqfeed_callback(results) {
-
-      for (let i = 0; i < results.features.length; i++) {
-        const coords = results.features[i].geometry.coordinates;
-
-        const latLng = new google.maps.LatLng(coords[1], coords[0]);
-        const marker = new google.maps.Marker({
-          position: latLng,
-          map: map,
-        });
-
-        const f = results.features[i].properties;
-
-        marker.addListener("click", (e) => {
-          const d = new Date(0);
-          d.setUTCMilliseconds(f.time);
-
-          const contentString =
-            '<div class="info-window-content">' +
-            '<h2>' + f.place + '</h2>' +
-            '<h3>Magnitude ' + f.mag + '</h3><p>' + d.toString() + '</p>' +
-            '<a href="' + f.url + '" target="new">View on USGS</a>' +
-            '</div>';
-
-          infoWindow.setContent(contentString);
-          infoWindow.open({
-            anchor: marker,
-            map,
-            shouldFocus: false,
-          });
-
-        });
-      }
-    }
-
-    window.initMap = initMap;
-    window.eqfeed_callback = eqfeed_callback;
-  </script>
 </head>
 
 <body class="group-layouts group-sidebar-layouts component-layout-sidebar-2 vsc-initialized">
   <div class="d-flex flex-column flex-lg-row h-lg-full bg-gray-100">
-    <!-- Vertical Navbar -->
+    <!-- navbar -->
     <nav
       class="navbar show navbar-vertical h-lg-screen navbar-expand-lg px-0 py-3 py-lg-0 navbar-light bg-light border-end-lg"
       id="navbarVertical">
       <div class="container-fluid">
-        <!-- Toggler -->
+        <!-- 햄버거 버튼 -->
         <button class="navbar-toggler ms-n2" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"
           aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <!-- Brand -->
+        <!-- click cloud 아이콘 -->
         <a class="navbar-brand py-lg-5 mb-lg-5 px-lg-6 me-0" href="#">
-          <img src="https://www.shareicon.net/download/2016/08/18/816084_cloud.svg" class="img-fluid">
+          <img src="https://www.shareicon.net/download/2016/08/18/816084_cloud.svg" class="img-fluid bg-light"
+            id="refresh">
         </a>
-        <!-- User menu (mobile) -->
+        <!-- 모바일용 navbar -->
         <div class="navbar-user d-lg-none">
-          <!-- Dropdown -->
           <div class="dropdown">
-            <!-- Toggle -->
             <a href="#" id="sidebarAvatar" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
-              <div class="avatar bg-warning rounded-circle text-white">
-                <img alt="..."
-                  src="https://images.unsplash.com/photo-1579463148228-138296ac3b98?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=256&amp;h=256&amp;q=80">
+              <div class="avatar text-white">
+                <img alt="..." src="https://www.shareicon.net/download/2016/08/18/816084_cloud.svg" id="refresh">
               </div>
             </a>
-            <!-- Menu -->
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-              <div class="dropdown-item">
-                <span class="d-block text-sm text-muted mb-1">Signed in as</span>
-                <span class="d-block text-heading font-semibold">Heather Wright</span>
-              </div>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Separated link</a>
-            </div>
           </div>
         </div>
-        <!-- Collapse -->
         <div class="collapse navbar-collapse" id="sidebarCollapse">
-          <!-- Navigation -->
+          <!-- 검색버튼 -->
+          <form class="d-flex flex-column p-2">
+            <div class="searchCName">
+              <input class="form-control me-2" action="" type="text" placeholder="City Name" aria-label="Search">
+            </div>
+            <div class="searchTime mb-2">
+              <input class="form-control me-2" action="" type="datetime-local" placeholder="time" aria-label="Search"
+                min="2024-01-22T09:00">
+            </div>
+            <button class="btn btn-outline-success mt-3 p-2 ms-auto" type="button">search</button>
+          </form>
+          <!-- navbar 상세메뉴들 -->
           <ul class="navbar-nav">
             <li class="nav-item">
               <a class="nav-link" href="#">
@@ -151,9 +98,9 @@
               </a>
             </li>
           </ul>
-          <!-- Divider -->
+          <!-- navbar 분할선 -->
           <hr class="navbar-divider my-5 opacity-20">
-          <!-- Navigation -->
+          <!-- navbar 하단부 -->
           <ul class="navbar-nav mb-md-4">
             <li class="nav-item">
               <a class="nav-link" href="#">
@@ -168,9 +115,7 @@
               </a>
             </li>
           </ul>
-          <!-- Push content down -->
           <div class="mt-auto"></div>
-          <!-- User (md) -->
           <ul class="navbar-nav mb-5">
             <li class="nav-item">
               <a class="nav-link" href="#">
@@ -186,13 +131,203 @@
         </div>
       </div>
     </nav>
-    <!-- Main content -->
+    <!-- 구글맵 api -->
     <div class="h-screen px-3 px-lg-7 flex-grow-1 overflow-y-lg-auto" id="map">
       <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAaDORY0JJFdyxxANCamZe-N6fD7tvZDVU&callback=initMap&v=weekly"
         defer></script>
     </div>
+    <!-- AIzaSyA-vW_ypSUXnvjMnX_VuR-gLLizAcdbhTI -->
   </div>
+
+  <script>
+    var map; // 맵 전역 변수 선언
+
+    function initMap() {
+      // 서울의 좌표(초기 중앙화면)
+      var seoulLatLng = { lat: 37.5665, lng: 126.9780 };
+
+      // 맵 생성
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: seoulLatLng,
+        zoom: 2
+      });
+
+      // DB에서 좌표를 가져와서 마커 찍어주는 메서드
+      $.ajax({
+        url: 'http://kosmo.iptime.org/api/global?time=1705542420',
+        method: 'GET',
+        //data: { ?? },
+        dataType: 'json',
+        success: function (data) {
+          // Iterate over the data and add markers to the map
+          $.each(data, function (index, item) {
+            var marker = new google.maps.Marker({
+              position: { lat: item.latitude, lng: item.longitude },
+              map: map,
+              title: item.city_name
+            });
+            //마커에 클릭 이벤트 핸들러 요청
+            addMarkerClickEvent(marker, item.city_name);
+          });
+        },
+        error: function (error) {
+          console.error('Error fetching data:', error);
+        }
+      });
+
+      // 현재 시각 업데이트를 위한 setInterval 설정
+      setInterval(timeNow, 1000);
+
+      console.log('Map initialized'); // 맵 초기화 확인용 로그
+    }
+
+    // 마커 클릭 이벤트 및 인포윈도우 생성 함수
+    function addMarkerClickEvent(marker, cityName) {
+      // API에서 데이터 가져오기
+      $.ajax({
+        url: 'http://kosmo.iptime.org/api/local',
+        type: 'POST',
+        data: {
+          name: cityName,
+          time: '1705542420'
+        },
+        success: function (jsonData) {
+          console.log('AJAX success:', jsonData); // AJAX 요청 성공 확인용 로그
+
+          // 인포윈도우 생성하고 내용 설정
+          var infowindow = new google.maps.InfoWindow({
+            content: createInfoWindowContent(jsonData)
+          });
+
+          // 마커에 인포윈도우 연결
+          marker.addListener('click', function () {
+            infowindow.open(map, marker);
+            console.log('Infowindow opened'); // 인포윈도우 열림 확인용 로그
+          });
+        },
+        error: function (error) {
+          console.error('API 요청 중 오류 발생:', error);
+        }
+      });
+    }
+
+    // replaceNullWithZero 함수 정의
+    function nullToZero(value) {
+      return value === null ? 0 : value;
+    }
+
+    // 인포윈도우 내용 생성 함수
+    function createInfoWindowContent(data) {
+      const convertTime = (timestamp) => {
+        const date = new Date(timestamp * 1000);
+        return date.toLocaleString();
+      };
+
+      // 날씨 유형에 따른 이미지 URL 설정
+      let weatherImageURL;
+      switch (data.w_title.toLowerCase()) {
+        case 'clear':
+          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/clear.png?raw=true';
+          break;
+        case 'clouds':
+          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/clouds.png?raw=true';
+          break;
+        case 'drizzle':
+          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/drizzle.png?raw=true';
+          break;
+        case 'mist':
+          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/mist.png?raw=true';
+          break;
+        case 'rain':
+          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/rain.png?raw=true';
+          break;
+        case 'snow':
+          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/snow.png?raw=true';
+          break;
+        default:
+          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/clear.png?raw=true';
+      }
+
+      // <p>데이터: ${convertTime(data.time_update)}</p>  
+
+      // null값이 들어갈만한 데이터의 속성 값에 대해 null을 0으로 대체
+      const pressure = nullToZero(data.pressure);
+      const humidity = nullToZero(data.humidity);
+      const wind_speed = nullToZero(data.wind_speed);
+      const wind_deg = nullToZero(data.wind_deg);
+      const rain_1h = nullToZero(data.rain_1h);
+      const snow_1h = nullToZero(data.snow_1h);
+      const cloud = nullToZero(data.cloud);
+
+      return `
+        <div class="wContainer">
+          <h2>${data.city_name}</h2>
+          <p>${data.country_name}</p>
+          <img src="${weatherImageURL}" width="120" height="120">
+          <p>${data.w_description}</p>
+          <p class="temp"><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/tempneww.png?raw=true" width="60" height="60"> ${Math.round(data.temp_now)}&deg;C</p>
+          <p>체감온도: ${Math.round(data.temp_feels)}&deg;C</p>
+          <p>최고/최저 온도: ${Math.round(data.temp_max)}&deg;C / ${Math.round(data.temp_min)}&deg;C</p>
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/pressure.png?raw=true"> ${pressure}hpa</p>
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/humidityreal.png?raw=true"> ${humidity}%</p>
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/windnew.png?raw=true"> ${wind_speed} m/s</p>
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/airport.png?raw=true"> ${wind_deg}</p>
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/precipitation.png?raw=true"> ${rain_1h} mm</p>
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/snowflower.png?raw=true"> ${snow_1h} mm</p>  
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/cloudicon.png?raw=true"> ${cloud} %</p>
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/sunrisereal.png?raw=true"> ${convertTime(data.sunrise)}</p>
+          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/sunset.png?raw=true"> ${convertTime(data.sunset)}</p>
+          <p>현재시각: <span id="currentTime"></span></p>
+        </div>
+      `;
+    }
+
+    // 현재 시각 업데이트 함수
+    function timeNow() {
+      const currentTimeMethod = document.getElementById('currentTime');
+      if (currentTimeMethod) {
+        const currentTime = new Date();
+        currentTimeMethod.innerText = currentTime.toLocaleString();
+      }
+    }
+
+    //햄버거 버튼 활성화
+    document.addEventListener('DOMContentLoaded', function () {
+      const navbarToggler = document.querySelector('.navbar-toggler');
+      const navbarCollapse = document.querySelector('.navbar-collapse');
+
+      navbarToggler.addEventListener('click', function () {
+        if (navbarCollapse.classList.contains('show')) {
+          navbarCollapse.classList.remove('show');
+        } else {
+          navbarCollapse.classList.add('show');
+        }
+      });
+    });
+
+
+    // 상단 구름 아이콘 새로고침(창모드 두종류 모두)
+    document.addEventListener('DOMContentLoaded', function () {
+      const refreshIcon = document.getElementById('refresh');
+
+      refreshIcon.addEventListener('click', function () {
+        event.preventDefault();
+        location.reload(true);
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const avatarLink = document.getElementById('sidebarAvatar');
+
+      avatarLink.addEventListener('click', function (event) {
+        event.preventDefault();
+        location.reload(true);
+      });
+    });
+
+  </script>
+
 </body>
 
 </html>

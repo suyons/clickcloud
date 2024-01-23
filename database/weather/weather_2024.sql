@@ -6,7 +6,7 @@ SELECT * FROM weather_2024;
 
 CREATE TABLE weather_2024 (
     weather_id INT NOT NULL UNIQUE AUTO_INCREMENT,
-    city_id INT NOT NULL UNIQUE,
+    city_id INT NOT NULL,
     w_title VARCHAR(20) NOT NULL,
     w_description VARCHAR(50) NOT NULL,
     temp_now DECIMAL(4, 2) NOT NULL,
@@ -35,8 +35,8 @@ INSERT INTO weather_2024
 VALUES (
     /* weather_id */ null,
     /* city_id */ 1835848,
-    /* w_title */ 'Clear',
-    /* w_description */ 'clear sky',
+    /* w_title */ 'Rainy',
+    /* w_description */ 'rainy sky',
     /* temp_now */ 2.96,
     /* temp_feels */ -0.39,
     /* temp_min */ 2.69,

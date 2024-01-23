@@ -13,6 +13,7 @@ public class IndexController {
     @Value("${index.url}")
     private String indexUrl;
 
+	@SuppressWarnings("null")
 	@GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
 	public Mono<String> getIndex() {
 		final WebClient client = WebClient.create();
