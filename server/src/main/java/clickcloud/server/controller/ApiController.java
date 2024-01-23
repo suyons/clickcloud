@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,4 +60,11 @@ public class ApiController {
 		else
 			return weatherApiService.getWeatherByName(city_name);
 	}
+
+    @GetMapping(value = "/test", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String mysqlTest() {
+        String test = mybatisMapper.getTest();
+        System.out.println("[Debug] COUNT: " + test);
+        return test;
+    }
 }

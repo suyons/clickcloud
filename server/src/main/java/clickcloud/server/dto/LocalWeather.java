@@ -7,6 +7,8 @@ import lombok.Data;
 public class LocalWeather {
     private String city_name;
     private String country_name;
+    private double latitude;
+    private double longitude;
     private String w_title;
     private String w_description;
     private double temp_now;

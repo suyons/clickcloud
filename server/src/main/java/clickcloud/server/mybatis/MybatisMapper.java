@@ -27,4 +27,6 @@ public interface MybatisMapper {
 	void insertWeather(Weather weather);
 
 	Integer getWeatherId();
+
+    String getTest();
 }

@@ -41,4 +41,9 @@
         #{rain_1h}, #{snow_1h}, #{cloud}, #{sunrise}, #{sunset}, #{time_update}
     )
   </insert>
+
+  <!-- TEST -->
+  <select id="getTest" resultType="java.lang.String">
+    SELECT COUNT(1) FROM weather_2024
+  </select>
 </mapper>
