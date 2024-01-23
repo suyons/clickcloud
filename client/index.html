@@ -8,7 +8,6 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.0/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://unpkg.com/@webpixels/css@1.1.93/dist/index.css">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <!-- <script src="maps_config.js"></script> -->
   <style>
     h2{
       color: white;
@@ -20,6 +19,11 @@
     }
     .temp{
       font-size: 30px;
+    }
+    .wContainer2{
+      text-align: center;
+      background : linear-gradient(to left bottom, #81d2f8, #24b8fe);
+      color: white;
     }
   </style>
   <title>Clickcloud 날씨 지도</title>
@@ -37,7 +41,7 @@
           aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <!-- click cloud 아이콘 -->
+        <!-- clickcloud 아이콘 -->
         <a class="navbar-brand py-lg-5 mb-lg-5 px-lg-6 me-0" href="#">
           <img src="https://www.shareicon.net/download/2016/08/18/816084_cloud.svg" class="img-fluid bg-light" id="refresh">
         </a>
@@ -47,85 +51,23 @@
             <a href="#" id="sidebarAvatar" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
               <div class="avatar text-white">
-                <img alt="..."
-                  src="https://www.shareicon.net/download/2016/08/18/816084_cloud.svg" id="refresh">
+                <img src="https://www.shareicon.net/download/2016/08/18/816084_cloud.svg" id="refresh">
               </div>
             </a>
           </div>
         </div>
         <div class="collapse navbar-collapse" id="sidebarCollapse">
           <!-- 검색버튼 -->
-          <form class="d-flex flex-column p-2">
-            <div class="searchCName">
-              <input class="form-control me-2" action="" type="text" placeholder="City Name" aria-label="Search">
-            </div>
-            <div class="searchTime mb-2">
-              <input class="form-control me-2" action="" type="datetime-local" placeholder="time" aria-label="Search" min="2024-01-22T09:00">
-            </div>
-            <button class="btn btn-outline-success mt-3 p-2 ms-auto" type="button">search</button>
-          </form>
-        <!-- navbar 상세메뉴들 -->  
-          <ul class="navbar-nav">  
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="bi bi-house"></i> Dashboard
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="bi bi-bar-chart"></i> Analitycs
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="bi bi-chat"></i> Messages
-                <span
-                  class="badge bg-opacity-30 bg-primary text-primary rounded-pill d-inline-flex align-items-center ms-auto">6</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="bi bi-bookmarks"></i> Collections
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="bi bi-people"></i> Users
-              </a>
-            </li>
-          </ul>
-          <!-- navbar 분할선 -->
-          <hr class="navbar-divider my-5 opacity-20">
-          <!-- navbar 하단부 -->
-          <ul class="navbar-nav mb-md-4">
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="bi bi-gear"></i> Settings
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="bi bi-bell"></i> Notifications
-                <span
-                  class="badge bg-opacity-30 bg-danger text-danger rounded-pill d-inline-flex align-items-center ms-auto">23</span>
-              </a>
-            </li>
-          </ul>
-          <div class="mt-auto"></div>
-          <ul class="navbar-nav mb-5">
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="bi bi-person-square"></i> Account
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="bi bi-box-arrow-left"></i> Logout
-              </a>
-            </li>
-          </ul>
+          <div class="d-flex flex-column p-2">
+            <input class="form-control me-2" action="" type="text" id="cityNameInput" placeholder="City Name" aria-label="Search">
+            <button class="btn btn-outline-success mt-3 p-2" type="button" id="searchButton" onclick="showWeather()">search</button>
+          </div>
+          <div class="d-flex flex-column p-2">
+            <input class="form-control me-2" action="" type="datetime-local" id="timeInput" placeholder="time" aria-label="Search" min="2024-01-22T09:00">
+            <button class="btn btn-outline-success mt-3 p-2" type="button" id="searchButton2">search</button>
+          </div>
         </div>
-      </div>
+      </div>  
     </nav>
     <!-- 구글맵 api -->
     <div class="h-screen px-3 px-lg-7 flex-grow-1 overflow-y-lg-auto" id="map">
@@ -133,49 +75,63 @@
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAaDORY0JJFdyxxANCamZe-N6fD7tvZDVU&callback=initMap&v=weekly"
         defer></script>                                  
     </div>
-    <!-- AIzaSyA-vW_ypSUXnvjMnX_VuR-gLLizAcdbhTI -->
   </div>
 
   <script>
-    var map; // 맵 전역 변수 선언
+    //맵, 마커, infoWindow 전역 변수 선언
+    var map; 
+    var marker;
+    var markers2 = [];
+    //timeNow 함수 1초마다 갱신
+    setInterval(timeNow, 1000);
 
     function initMap() {
-      // 서울의 좌표(초기 중앙화면)
+      // 서울의 좌표(초기 중앙화면을 위함)
       var seoulLatLng = { lat: 37.5665, lng: 126.9780 };
 
       // 맵 생성
       map = new google.maps.Map(document.getElementById('map'), {
         center: seoulLatLng,
-        zoom: 2
+        zoom: 4,
+        minZoom: 2,
+        maxZoom: 15,
+        mapId: 'cbabf3c5f0873fa7',
+        //줌 아웃시 구글맵 범위 밖으로 벗어나는거 제한
+        restriction: {
+          latLngBounds: {
+            north: 85, 
+            south: -85, 
+            west: -180, 
+            east: 180, 
+          },
+        },
       });
 
       // DB에서 좌표를 가져와서 마커 찍어주는 메서드
       $.ajax({
-                url: 'http://kosmo.iptime.org/api/global?time=1705542420',
-                method: 'GET',
-                //data: { ?? },
-                dataType: 'json',
-                success: function (data) {
-                    // Iterate over the data and add markers to the map
-                    $.each(data, function (index, item) {
-                        var marker = new google.maps.Marker({
-                            position: { lat: item.latitude, lng: item.longitude },
-                            map: map,
-                            title: item.city_name
-                        });
-                    //마커에 클릭 이벤트 핸들러 요청
-                    addMarkerClickEvent(marker, item.city_name);    
-                    });
-                },
-                error: function (error) {
-                    console.error('Error fetching data:', error);
-                }
-            });
-      
-      // 현재 시각 업데이트를 위한 setInterval 설정
-      setInterval(timeNow, 1000);      
-
-      console.log('Map initialized'); // 맵 초기화 확인용 로그
+          url: 'http://kosmo.iptime.org/api/global',
+          method: 'POST',
+          //data: { 
+          //  time: ?? 
+          //},
+          dataType: 'json',
+          success: function (data) {
+              // 맵에 DB상의 좌표로 마커 마커들 찍어줌
+              $.each(data, function (index, item) {
+                  var marker = new google.maps.Marker({
+                      position: { lat: item.latitude, lng: item.longitude },
+                      map: map,
+                      title: item.city_name
+                  });
+              //마커에 클릭 이벤트 핸들러 요청
+              addMarkerClickEvent(marker, item.city_name);    
+              });
+          },
+          error: function (error) {
+              console.error('api 오류', error);
+          }
+      });
+       
     }
 
     // 마커 클릭 이벤트 및 인포윈도우 생성 함수
@@ -186,10 +142,11 @@
         type: 'POST',
         data: {
           name: cityName,
-          time: '1705542420'
+          //time: '1705542420'
         },
         success: function (jsonData) {
-          console.log('AJAX success:', jsonData); // AJAX 요청 성공 확인용 로그
+          // AJAX 요청 성공 확인 로그
+          console.log('AJAX success:', jsonData); 
 
           // 인포윈도우 생성하고 내용 설정
           var infowindow = new google.maps.InfoWindow({
@@ -208,13 +165,14 @@
       });
     }
     
-    // replaceNullWithZero 함수 정의
+    // 데이터로 받아오는 null값을 0으로 치환하는 함수
     function nullToZero(value) {
       return value === null ? 0 : value;
     }
 
     // 인포윈도우 내용 생성 함수
     function createInfoWindowContent(data) {
+      //일출시각, 일몰시각 unix timestamp 변환 함수
       const convertTime = (timestamp) => {
         const date = new Date(timestamp * 1000);
         return date.toLocaleString();
@@ -224,30 +182,28 @@
       let weatherImageURL;
       switch (data.w_title.toLowerCase()) {
         case 'clear':
-          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/clear.png?raw=true';
+          weatherImageURL = 'https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/clear.png';
           break;
         case 'clouds':
-          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/clouds.png?raw=true';
+          weatherImageURL = 'https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/clouds.png';
           break;
         case 'drizzle':
-          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/drizzle.png?raw=true';
+          weatherImageURL = 'https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/drizzle.png';
           break;
         case 'mist':
-          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/mist.png?raw=true';
+          weatherImageURL = 'https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/mist.png';
           break;
         case 'rain':
-          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/rain.png?raw=true';
+          weatherImageURL = 'https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/rain.png';
           break;
         case 'snow':
-          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/snow.png?raw=true';
+          weatherImageURL = 'https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/snow.png';
           break;
         default:
-          weatherImageURL = 'https://github.com/mogri89/iconcdn/blob/main/weatherimg/clear.png?raw=true';
+          weatherImageURL = 'https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/clear.png';
       }
-
-      // <p>데이터: ${convertTime(data.time_update)}</p>  
-      
-      // null값이 들어갈만한 데이터의 속성 값에 대해 null을 0으로 대체
+       
+      // nullToZero 함수로 null값이 들어갈만한 데이터 변환
       const pressure = nullToZero(data.pressure);
       const humidity = nullToZero(data.humidity);
       const wind_speed = nullToZero(data.wind_speed);
@@ -262,24 +218,24 @@
           <p>${data.country_name}</p>
           <img src="${weatherImageURL}" width="120" height="120">
           <p>${data.w_description}</p>
-          <p class="temp"><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/tempneww.png?raw=true" width="60" height="60"> ${Math.round(data.temp_now)}&deg;C</p>
-          <p>체감온도: ${Math.round(data.temp_feels)}&deg;C</p>
-          <p>최고/최저 온도: ${Math.round(data.temp_max)}&deg;C / ${Math.round(data.temp_min)}&deg;C</p>
-          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/pressure.png?raw=true"> ${pressure}hpa</p>
-          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/humidityreal.png?raw=true"> ${humidity}%</p>
-          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/windnew.png?raw=true"> ${wind_speed} m/s</p>
-          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/airport.png?raw=true"> ${wind_deg}</p>
-          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/precipitation.png?raw=true"> ${rain_1h} mm</p>
-          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/snowflower.png?raw=true"> ${snow_1h} mm</p>  
-          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/cloudicon.png?raw=true"> ${cloud} %</p>
-          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/sunrisereal.png?raw=true"> ${convertTime(data.sunrise)}</p>
-          <p><img src="https://github.com/mogri89/iconcdn/blob/main/iconnew/sunset.png?raw=true"> ${convertTime(data.sunset)}</p>
+          <p class="temp"><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/temp-icon.png" width="60" height="60"> ${Math.round(data.temp_now)}&deg;C</p>
+          <p>체감온도 ${Math.round(data.temp_feels)} &deg;C</p>
+          <p>최고/최저온도 ${Math.round(data.temp_max)} &deg;C / ${Math.round(data.temp_min)} &deg;C</p>
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/pressure-icon.png"> ${pressure} hpa</p>
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/humidity-icon.png"> ${humidity} %</p>
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/wind-icon.png"> ${wind_speed} m/s</p>
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/wind_deg-icon.png"> ${wind_deg}</p>
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/precipitation-icon.png"> ${rain_1h} mm</p>
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/snowflower-icon.png"> ${snow_1h} mm</p>  
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/cloud-icon.png"> ${cloud} %</p>
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/sunrise-icon.png"> ${convertTime(data.sunrise)}</p>
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/sunset-icon.png"> ${convertTime(data.sunset)}</p>
           <p>현재시각: <span id="currentTime"></span></p>
         </div>
       `;
     }
 
-    // 현재 시각 업데이트 함수
+    // infowindow 내부에 사용할 동적인 현재 시각 업데이트 함수
     function timeNow() {
       const currentTimeMethod = document.getElementById('currentTime');
       if (currentTimeMethod) {
@@ -287,8 +243,140 @@
         currentTimeMethod.innerText = currentTime.toLocaleString();
       }
     }
+
+    // 검색창 메서드
+    function showWeather() {
+      var cityNameInput = document.getElementById('cityNameInput').value;
+      if (!cityNameInput) {
+        alert('검색하고자 하는 도시 이름을 입력해주세요.');
+        return;
+      }
+
+      // openweathermap api 호출
+      $.ajax({
+        url: `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${cityNameInput}&appid=38441e8dedceb6c9e64960261dea0d91`,
+        method: 'GET',
+        success: function (data) {
+          if (data.coord) {
+            var latLng = { lat: data.coord.lat, lng: data.coord.lon };
+
+            // 마커생성
+            var marker2 = new google.maps.Marker({
+              position: latLng,
+              map: map,
+              title: cityNameInput
+            });
+
+            // 마커 클릭 이벤트핸들러
+            marker2.addListener('click', function () {
+              showInfoWindow(marker2, data);
+            });
+
+            // 마커 위치로 화면 이동
+            map.setCenter(latLng);
+            map.setZoom(8);
+
+            // 마커를 배열에 추가
+            markers2.push({
+              marker2: marker2,
+              data: data,
+              infowindow2: new google.maps.InfoWindow() 
+            });  
+          } else {
+            alert('올바른 도시이름을 입력해주세요.');
+          }
+        },
+        error: function (error) {
+          console.error('Error fetching weather data:', error);
+        }
+      });
+    }
+
+    //해당 마커 위치에서 infowindow2 객체 부여하고 오픈
+    function showInfoWindow(marker2, data) {
+      var contentString = createInfoWindowContent2(data);
+      var infowindow2 = findInfowindow(marker2);
+      infowindow2.setContent(contentString);
+      infowindow2.open(map, marker2);
+    }
+
+    // 주어진 마커에 대한 인포윈도우 찾기
+    function findInfowindow(marker2) {
+      for (var i = 0; i < markers2.length; i++) {
+        if (markers2[i].marker2 === marker2) {
+          return markers2[i].infowindow2;
+        }
+      }
+      return null;
+    }
+
+    // 검색용 infowindow2 객체 내용 생성
+    function createInfoWindowContent2(data) {
+      const convertTime = (timestamp) => {
+        const date = new Date(timestamp * 1000);
+        return date.toLocaleString();
+      };
+
+      // 날씨 유형에 따른 이미지 URL 설정
+      let weatherImageURL2;
+      switch (data.weather[0].main.toLowerCase()) {
+        case 'clear':
+          weatherImageURL2 = 'https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/clear.png';
+          break;
+        case 'clouds':
+          weatherImageURL2 = 'https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/clouds.png';
+          break;
+        case 'drizzle':
+          weatherImageURL2 = 'https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/drizzle.png';
+          break;
+        case 'mist':
+          weatherImageURL2 = 'https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/mist.png';
+          break;
+        case 'rain':
+          weatherImageURL2 = 'https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/rain.png';
+          break;
+        case 'snow':
+          weatherImageURL2 = 'https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/snow.png';
+          break;
+        default:
+          weatherImageURL2 = 'https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/clear.png';
+      }
+
+      // null값이 들어갈만한 데이터의 속성 값에 대해 null을 0으로 대체
+      const pressure = data.main.pressure || 0;
+      const humidity = data.main.humidity || 0;
+      const wind_speed = data.wind.speed || 0;
+      const wind_deg = data.wind.deg || 0;
+      const rain_1h = data.rain ? data.rain['1h'] || 0 : 0;
+      const snow_1h = data.snow ? data.snow['1h'] || 0 : 0;
+      const cloud = data.clouds ? data.clouds.all || 0 : 0;
+
+      //검색용 infowindow 구성
+      return `
+        <div class="wContainer2">
+          <h2>${data.name}</h2>
+          <p>${countryCodeToName(data.sys.country)}</p>
+          <img src="${weatherImageURL2}" width="120" height="120">
+          <p>${data.weather[0].description}</p>
+          <p class="temp"><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/temp-icon.png" width="60" height="60"> ${Math.round(data.main.temp)}&deg;C</p>
+          <p>체감온도 ${Math.round(data.main.feels_like)}&deg;C</p>
+          <p>최고/최저온도 ${Math.round(data.main.temp_max)} &deg;C / ${Math.round(data.main.temp_min)} &deg;C</p>
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/pressure-icon.png"> ${pressure} hPa</p>
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/humidity-icon.png"> ${humidity} %</p>
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/wind-icon.png"> ${wind_speed} m/s</p>
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/wind_deg-icon.png"> ${wind_deg} &deg;</p>
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/precipitation-icon.png"> ${rain_1h} mm</p>
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/snowflower-icon.png"> ${snow_1h} mm</p>
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/cloud-icon.png"> ${cloud} %</p>
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/sunrise-icon.png"> ${convertTime(data.sys.sunrise)}</p>
+          <p><img src="https://clickcloud-static.s3.ap-northeast-2.amazonaws.com/images/sunset-icon.png"> ${convertTime(data.sys.sunset)}</p>
+          <p>현재시각: <span id="currentTime"></span></p>
+        </div>
+      `;
+    }
+
     
-    //햄버거 버튼 활성화
+    //햄버거버튼을 눌렀을때 모바일용 내비바가 펼쳐지도록하는 메서드
     document.addEventListener('DOMContentLoaded', function () {
       const navbarToggler = document.querySelector('.navbar-toggler');
       const navbarCollapse = document.querySelector('.navbar-collapse');
@@ -303,16 +391,18 @@
     });
      
   
-    // 상단 구름 아이콘 새로고침(창모드 두종류 모두)
+    //상단 구름 아이콘 새로고침
     document.addEventListener('DOMContentLoaded', function () {
       const refreshIcon = document.getElementById('refresh');
 
       refreshIcon.addEventListener('click', function () {
+        //기본 동작을 막고 새로고침하는 함수
         event.preventDefault();
         location.reload(true); 
       });
     });
 
+    //모바일 상단 구름 아이콘 새로고침
     document.addEventListener('DOMContentLoaded', function () {
     const avatarLink = document.getElementById('sidebarAvatar');
 
@@ -322,9 +412,269 @@
       });
     });
     
-    
-
-
+    //국가 코드를 받아 국가명으로 변환하는 함수
+    function countryCodeToName(countryCode) {
+      var countryMapping = {
+        'AD': 'Andorra',
+        'AE': 'United arab emirates',
+        'AF': 'Afghanistan',
+        'AG': 'Antigua and barbuda',
+        'AI': 'Anguilla',
+        'AL': 'Albania',
+        'AM': 'Armenia',
+        'AN': 'Netherlands antilles',
+        'AO': 'Angola',
+        'AQ': 'Antarctica',
+        'AR': 'Argentina',
+        'AS': 'American samoa',
+        'AT': 'Austria',
+        'AU': 'Australia',
+        'AW': 'Aruba',
+        'AX': 'Aland islands',
+        'AZ': 'Azerbaijan',
+        'BA': 'Bosnia hercegovina',
+        'BB': 'Barbados',
+        'BD': 'Bangladesh',
+        'BE': 'Belgium',
+        'BF': 'Burkina faso',
+        'BG': 'Bulgaria',
+        'BH': 'Bahrain',
+        'BI': 'Burundi',
+        'BJ': 'Benin',
+        'BL': 'Saint barthelemy',
+        'BM': 'Bermuda',
+        'BN': 'Brunei darussalam',
+        'BO': 'Bolivia',
+        'BQ': 'Bonaire',
+        'BR': 'Brazil',
+        'BS': 'Bahamas',
+        'BT': 'Bhutan',
+        'BV': 'Bouvet island',
+        'BW': 'Botswana',
+        'BY': 'Belarus',
+        'BZ': 'Belize',
+        'CA': 'Canada',
+        'CC': 'Cocos (keeling) islands',
+        'CD': 'Democratic republic of the congo',
+        'CF': 'Central african republic',
+        'CG': 'Congo',
+        'CH': 'Switzerland',
+        'CI': 'Cote d`ivoire',
+        'CK': 'Cook islands',
+        'CL': 'Chile',
+        'CM': 'Cameroon',
+        'CN': 'China',
+        'CO': 'Colombia',
+        'CR': 'Costa rica',
+        'CU': 'Cuba',
+        'CV': 'Cape verde',
+        'CW': 'Curacao',
+        'CX': 'Christmas island',
+        'CY': 'Cyprus',
+        'CZ': 'Czech republic',
+        'DE': 'Germany',
+        'DJ': 'Djibouti',
+        'DK': 'Denmark',
+        'DM': 'Dominica',
+        'DO': 'Dominican republic',
+        'DZ': 'Algeria',
+        'EC': 'Ecuador',
+        'EE': 'Estonia',
+        'EG': 'Egypt',
+        'EH': 'Western sahara',
+        'ER': 'Eritrea',
+        'ES': 'Spain',
+        'ET': 'Ethiopia',
+        'FI': 'Finland',
+        'FJ': 'Fiji',
+        'FK': 'Falkland islands',
+        'FM': 'Micronesia',
+        'FO': 'Faroe islands',
+        'FR': 'France',
+        'GA': 'Gabon',
+        'GB': 'United kingdom',
+        'GD': 'Grenada',
+        'GE': 'Georgia',
+        'GF': 'French guiana',
+        'GG': 'Guernsey',
+        'GH': 'Ghana',
+        'GI': 'Gibraltar',
+        'GL': 'Greenland',
+        'GM': 'Gambia',
+        'GN': 'Guinea',
+        'GP': 'Guadeloupe',
+        'GQ': 'Equatorial guinea',
+        'GR': 'Greece',
+        'GS': 'South georgia and south sandwich island',
+        'GT': 'Guatemala',
+        'GU': 'Guam',
+        'GW': 'Guinea-bissau',
+        'GY': 'Guyana',
+        'HK': 'Hong kong',
+        'HM': 'Heard and mcdonald islands',
+        'HN': 'Honduras',
+        'HR': 'Croatia',
+        'HT': 'Haiti',
+        'HU': 'Hungary',
+        'HW': 'Hawaii',
+        'ID': 'Indonesia',
+        'IE': 'Ireland',
+        'IL': 'Israel',
+        'IM': 'Isle of man',
+        'IN': 'India',
+        'IO': 'British indian ocean territory',
+        'IQ': 'Iraq',
+        'IR': 'Iran',
+        'IS': 'Iceland',
+        'IT': 'Italy',
+        'JE': 'Jersey',
+        'JM': 'Jamaica',
+        'JO': 'Jordan',
+        'JP': 'Japan',
+        'KE': 'Kenya',
+        'KG': 'Kyrgyzstan',
+        'KH': 'Cambodia',
+        'KI': 'Kiribati',
+        'KM': 'Comoros',
+        'KN': 'Saint kitts and nevis',
+        'KP': "Korea, Democratic People's of",
+        'KR': 'Korea, Republic of',
+        'KV': 'Kosovo',
+        'KW': 'Kuwait',
+        'KY': 'Cayman islands',
+        'KZ': 'Kazakhstan',
+        'LA': 'Laos',
+        'LB': 'Lebanon',
+        'LC': 'Saint lucia',
+        'LI': 'Liechtenstein',
+        'LK': 'Sri lanka',
+        'LR': 'Liberia',
+        'LS': 'Lesotho',
+        'LT': 'Lithuania',
+        'LU': 'Luxembourg',
+        'LV': 'Latvia',
+        'LY': 'Libyan arab jamahiriya',
+        'MA': 'Morocco',
+        'MC': 'Monaco',
+        'MD': 'Moldova',
+        'ME': 'Montenegro',
+        'MF': 'Saint martin (french part)',
+        'MG': 'Madagascar',
+        'MH': 'Marshall islands',
+        'MK': 'Macedonia',
+        'ML': 'Mali',
+        'MM': 'Myanmar',
+        'MN': 'Mongolia',
+        'MO': 'Macau',
+        'MP': 'Northern mariana islands',
+        'MQ': 'Martinique',
+        'MR': 'Mauritania',
+        'MS': 'Montserrat',
+        'MT': 'Malta',
+        'MU': 'Mauritius',
+        'MV': 'Maldives',
+        'MW': 'Malawi',
+        'MX': 'Mexico',
+        'MY': 'Malaysia',
+        'MZ': 'Mozambique',
+        'NA': 'Namibia',
+        'NC': 'New caledonia',
+        'NE': 'Niger',
+        'NF': 'Norfolk island',
+        'NG': 'Nigeria',
+        'NI': 'Nicaragua',
+        'NL': 'Netherlands',
+        'NO': 'Norway',
+        'NP': 'Nepal',
+        'NR': 'Nauru',
+        'NT': 'Neutral zone',
+        'NU': 'Niue',
+        'NZ': 'New zealand',
+        'OM': 'Oman',
+        'PA': 'Panama',
+        'PE': 'Peru',
+        'PF': 'French polynesia',
+        'PG': 'Papua new guinea',
+        'PH': 'Philippines',
+        'PK': 'Pakistan',
+        'PL': 'Poland',
+        'PM': 'Saint pierre and miquelon',
+        'PN': 'Pitcairn',
+        'PR': 'Puerto rico',
+        'PS': 'Palestine',
+        'PT': 'Portugal',
+        'PW': 'Palau',
+        'PY': 'Paraguay',
+        'QA': 'Qatar',
+        'RE': 'Reunion',
+        'RO': 'Romania',
+        'RS': 'Serbia',
+        'RU': 'Russian federation',
+        'RW': 'Rwanda',
+        'SA': 'Saudi arabia',
+        'SB': 'Solomon islands',
+        'SC': 'Seychelles',
+        'SD': 'Sudan',
+        'SE': 'Sweden',
+        'SG': 'Singapore',
+        'SH': 'Saint helena',
+        'SI': 'Slovenia',
+        'SJ': 'Svalbard and jan mayen islands',
+        'SK': 'Slovakia',
+        'SL': 'Sierra leone',
+        'SM': 'San marino',
+        'SN': 'Senegal',
+        'SO': 'Somalia',
+        'SR': 'Suriname',
+        'SS': 'South sudan',
+        'ST': 'Sao tome and principe',
+        'SV': 'El salvador',
+        'SX': 'Sint maarten (dutch part)',
+        'SY': 'Syrian arab republic',
+        'SZ': 'Swaziland',
+        'TC': 'Turks and caicos islands',
+        'TD': 'Chad',
+        'TF': 'French southern territories',
+        'TG': 'Togo',
+        'TH': 'Thailand',
+        'TJ': 'Tajikistan',
+        'TK': 'Tokelau',
+        'TL': 'East timor',
+        'TM': 'Turkmenistan',
+        'TN': 'Tunisia',
+        'TO': 'Tonga',
+        'TR': 'Turkey',
+        'TT': 'Trinidad and tobago',
+        'TV': 'Tuvalu',
+        'TW': 'Taiwan',
+        'TZ': 'Tanzania',
+        'UA': 'Ukraine',
+        'UG': 'Uganda',
+        'UM': 'United states minor outlying islands',
+        'US': 'United states',
+        'UY': 'Uruguay',
+        'UZ': 'Uzbekistan',
+        'VA': 'Vatican city state',
+        'VC': 'Saint vincent and the grenadines',
+        'VE': 'Venezuela',
+        'VG': 'Virgin islands (british)',
+        'VI': 'Virgin islands (u.s.)',
+        'VN': 'Viet nam',
+        'VU': 'Vanuatu',
+        'WF': 'Wallis and futuna islands',
+        'WS': 'Samoa',
+        'YE': 'Yemen',
+        'YT': 'Mayotte',
+        'YU': 'Yugoslavia',
+        'ZA': 'South africa',
+        'ZM': 'Zambia',
+        'ZR': 'Zaire',
+        'ZW': 'Zimbabwe',
+        'ZZ': 'Unknown',
+      };
+      
+      return countryMapping[countryCode] || countryCode;
+    }
 
   </script>
 
