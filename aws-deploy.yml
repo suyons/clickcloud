@@ -1,0 +1,54 @@
+name: Deploy to AWS
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+    # deploy_s3:
+    #     runs-on: ubuntu-latest
+    #     steps:
+    #         - name: Checkout Repository
+    #           uses: actions/checkout@v3
+
+    #         - name: Deploy client files to S3
+    #           # https://github.com/jakejarvis/s3-sync-action/tree/master/
+    #           uses: jakejarvis/s3-sync-action@master
+    #           with:
+    #               args: --acl public-read --follow-symlinks --delete
+    #           env:
+    #               AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+    #               AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #               AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_PW }}
+    #               AWS_REGION: "ap-northeast-2"
+    #               SOURCE_DIR: "client"
+
+    # deploy_eb:
+    #     runs-on: ubuntu-latest
+    #     steps:
+    #         - name: Checkout Repository
+    #           uses: actions/checkout@v3
+
+    #         - name: Set up JDK 17
+    #           # https://github.com/actions/setup-java/tree/v2/
+    #           uses: actions/setup-java@v3
+    #           with:
+    #               # https://adoptium.net/temurin/releases/
+    #               distribution: "temurin"
+    #               java-version: "17"
+    #               cache: "maven"
+
+    #         - name: Build with Maven
+    #           run: mvn clean package -B --file server/pom.xml
+
+    #         - name: Deploy to AWS Elastic Beanstalk
+    #           # https://github.com/einaregilsson/beanstalk-deploy
+    #           uses: einaregilsson/beanstalk-deploy@v21
+    #           with:
+    #             aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #             aws_secret_key: ${{ secrets.AWS_ACCESS_KEY_PW }}
+    #             application_name: "clickcloud"
+    #             environment_name: "clickcloud-server"
+    #             version_label: "1.0.0"
+    #             region: "ap-northeast-2"
+    #             deployment_package: "server/target/clickcloud-server.jar"
