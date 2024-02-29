@@ -10,7 +10,7 @@
 
     | 이름 | 프로필 | 역할 |
     | :-: | :-: | --- |
-    | 김수영 | [@suyons](https://github.com/suyons) | (1) 아이디어 기획, 개발 환경 준비<br>(2) DB 설계 및 서버 연동<br>(3) 클라우드 배포 설정 |
+    | 김수영 | [@suyons](https://github.com/suyons) | (1) 프로토타입 제작, 개발 환경 준비<br>(2) DB 설계 및 서버 연동<br>(3) AWS 배포 설정 |
     | 박지은 | [@parkje72](https://github.com/parkje72) | (1) 서버 REST API 구현<br>(2) 클라이언트 데이터 처리 |
     | 이동준 | [@mogri89](https://github.com/mogri89) | (1) 프론트엔드 페이지 작성<br>(2) 클라이언트 데이터 처리<br>(3) OpenAPI 도입 및 자원 관리 |
 
